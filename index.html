@@ -15,7 +15,7 @@
       animation: gradientAnimation 15s ease infinite;
       color: white;
       overflow-x: hidden;
-      height: 100vh;
+      min-height: 100vh;
     }
     nav {
       position: fixed;
@@ -68,36 +68,7 @@
       margin-bottom: 40px;
       letter-spacing: 1px;
     }
-    <!-- Notice Section -->
-<div style="max-width: 700px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-  <h2 style="text-align:center; color:#2e86de;">📢 Latest Notices</h2>
-  <ul id="notice-list" style="list-style: none; padding-left: 0;"></ul>
-</div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="firebase-config.js"></script>
-
-<script>
-  const noticeList = document.getElementById("notice-list");
-
-  firebase.database().ref("notices").on("value", (snapshot) => {
-    noticeList.innerHTML = "";
-    const data = snapshot.val();
-    if (!data) {
-      noticeList.innerHTML = "<li>No notices available.</li>";
-      return;
-    }
-    Object.values(data).reverse().forEach(n => {
-      const li = document.createElement("li");
-      li.style.padding = "10px";
-      li.style.borderBottom = "1px solid #ddd";
-      li.innerHTML = `<strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}`;
-      noticeList.appendChild(li);
-    });
-  });
-</script>
-    
     .btn {
       padding: 15px 30px;
       background-color: #ffd700;
@@ -126,6 +97,28 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
+    .notice-box {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #fff;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .notice-box h2 {
+      text-align: center;
+      color: #2e86de;
+    }
+    .notice-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .notice-box ul li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
@@ -137,7 +130,7 @@
       <li><a href="about.html">About Us</a></li>
       <li><a href="admission.html">Admissions</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="login.html">Login</a></li> <!-- New Login Option -->
+      <li><a href="login.html">Login</a></li>
     </ul>
   </nav>
 
@@ -148,10 +141,41 @@
     <a href="admission.html"><button class="btn">Apply for Admission</button></a>
   </section>
 
+  <!-- Notice Section -->
+  <div class="notice-box">
+    <h2>📢 Latest Notices</h2>
+    <ul id="notice-list">
+      <li>Loading latest notices...</li>
+    </ul>
+  </div>
+
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 Maa Saraswati Shikshayatan | Designed by Anup Sarkar</p>
   </footer>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const noticeList = document.getElementById("notice-list");
+
+    firebase.database().ref("notices").on("value", (snapshot) => {
+      noticeList.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) {
+        noticeList.innerHTML = "<li>No notices available.</li>";
+        return;
+      }
+      Object.values(data).reverse().forEach(n => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}`;
+        noticeList.appendChild(li);
+      });
+    });
+  </script>
 
 </body>
 </html>
