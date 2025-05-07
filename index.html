@@ -68,6 +68,36 @@
       margin-bottom: 40px;
       letter-spacing: 1px;
     }
+    <!-- Notice Section -->
+<div style="max-width: 700px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center; color:#2e86de;">📢 Latest Notices</h2>
+  <ul id="notice-list" style="list-style: none; padding-left: 0;"></ul>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+  const noticeList = document.getElementById("notice-list");
+
+  firebase.database().ref("notices").on("value", (snapshot) => {
+    noticeList.innerHTML = "";
+    const data = snapshot.val();
+    if (!data) {
+      noticeList.innerHTML = "<li>No notices available.</li>";
+      return;
+    }
+    Object.values(data).reverse().forEach(n => {
+      const li = document.createElement("li");
+      li.style.padding = "10px";
+      li.style.borderBottom = "1px solid #ddd";
+      li.innerHTML = `<strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}`;
+      noticeList.appendChild(li);
+    });
+  });
+</script>
+    
     .btn {
       padding: 15px 30px;
       background-color: #ffd700;
