@@ -109,7 +109,7 @@
 
       auth.signInWithEmailAndPassword(email, password).then(userCredential => {
         const user = userCredential.user;
-        window.location.href = user.email === "admin@example.com" ? "admin-dashboard.html" : "student-dashboard.html";
+        window.location.href = user.email === "admin@example.com" ? "dashboard.html" : "student-dashboard.html";
       }).catch(error => {
         alert(error.message);
       });
