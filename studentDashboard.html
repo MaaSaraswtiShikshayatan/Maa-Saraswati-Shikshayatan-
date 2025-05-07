@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome, Student!</h2>
+    <div id="studentData">
+      <p>Your UID: <span id="uid"></span></p>
+      <p>Fees Paid:</p>
+      <ul id="feeList"></ul>
+      <p>Result:</p>
+      <ul id="resultList"></ul>
+    </div>
+  </div>
+  <script src="firebase.js"></script>
+  <script>
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const uid = user.uid;
+        firebase.database().ref("students/" + uid).once("value", (snapshot) => {
+          const data = snapshot.val();
+          document.getElementById("uid").innerText = data.uid;
+          const feeList = document.getElementById("feeList");
+          const resultList = document.getElementById("resultList");
+          for (let month in data.fees) {
+            feeList.innerHTML += `<li>${month}: ₹${data.fees[month]}</li>`;
+          }
+          for (let subject in data.results) {
+            resultList.innerHTML += `<li>${subject}: ${data.results[subject]}</li>`;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

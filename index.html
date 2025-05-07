@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maa Saraswati Shikshayatan</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-section">
+      <h1>Maa Saraswati Shikshayatan</h1>
+      <div class="slider">
+        <span>Welcome to Wisdom</span>
+        <span>Learn. Lead. Shine.</span>
+        <span>Your Journey Starts Here</span>
+      </div>
+    </div>
+
+    <div class="login-section">
+      <h2>Login / Signup</h2>
+      <input type="email" id="email" placeholder="Email or Mobile" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button onclick="signup()">Sign Up</button>
+      <p><a href="#" onclick="resetPassword()">Forgot Password?</a></p>
+    </div>
+  </div>
+
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
