@@ -2,49 +2,168 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Maa Saraswati Shikshayatan</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
-    }
-    header {
-      background: #1e3c72;
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
       padding: 20px;
+    }
+    h1, h2 {
       text-align: center;
-      font-size: 24px;
+      color: #2e86de;
+    }
+    .section {
+      background: white;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .section label {
+      display: block;
+      margin-top: 10px;
       font-weight: bold;
     }
-    .dashboard {
-      padding: 40px;
-      text-align: center;
+    input, textarea, select, button {
+      width: 100%;
+      margin: 5px 0 15px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      margin: 20px auto;
-      padding: 30px;
-      border-radius: 12px;
-      max-width: 400px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      transition: transform 0.3s;
+    button {
+      background-color: #2e86de;
+      color: white;
+      cursor: pointer;
     }
-    .card:hover {
-      transform: scale(1.05);
+    .message {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .timestamp {
+      font-size: 12px;
+      color: gray;
     }
   </style>
 </head>
 <body>
-  <header>
-    Admin Dashboard
-  </header>
-  <div class="dashboard">
-    <div class="card">View Students</div>
-    <div class="card">Manage Attendance</div>
-    <div class="card">Fee Management</div>
-    <div class="card">Announcements</div>
+
+  <h1>Admin Dashboard</h1>
+
+  <!-- Student Data Section -->
+  <div class="section">
+    <h2>Update Student Data</h2>
+    <label>Student UID</label>
+    <input type="text" id="uid" placeholder="Enter Firebase UID" required />
+
+    <label>Name</label>
+    <input type="text" id="sname" placeholder="Student Name" />
+
+    <label>Class</label>
+    <select id="class">
+      <option value="9">Class 9</option>
+      <option value="10">Class 10</option>
+      <option value="11">Class 11</option>
+      <option value="12">Class 12</option>
+    </select>
+
+    <label>Subject Marks</label>
+    <input type="text" id="bengali" placeholder="Bengali Marks" />
+    <input type="text" id="history" placeholder="History Marks" />
+    <input type="text" id="geography" placeholder="Geography Marks" />
+    <input type="text" id="education" placeholder="Education Marks (Class 11/12)" />
+    <input type="text" id="philosophy" placeholder="Philosophy Marks (Class 11/12)" />
+
+    <label>Fees Paid (₹)</label>
+    <input type="text" id="fees" placeholder="Total Paid Fees" />
+
+    <button onclick="updateStudent()">Update Student Info</button>
   </div>
+
+  <!-- Notice Section -->
+  <div class="section">
+    <h2>Add Notice</h2>
+    <textarea id="noticeText" placeholder="Write a new notice here..."></textarea>
+    <button onclick="addNotice()">Add Notice</button>
+  </div>
+
+  <!-- Contact Messages Viewer -->
+  <div class="section">
+    <h2>Contact Messages</h2>
+    <div id="messages-list">Loading messages...</div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const db = firebase.database();
+
+    function updateStudent() {
+      const uid = document.getElementById("uid").value;
+      const sname = document.getElementById("sname").value;
+      const sclass = document.getElementById("class").value;
+      const bengali = document.getElementById("bengali").value;
+      const history = document.getElementById("history").value;
+      const geography = document.getElementById("geography").value;
+      const education = document.getElementById("education").value;
+      const philosophy = document.getElementById("philosophy").value;
+      const fees = document.getElementById("fees").value;
+
+      const data = {
+        name: sname,
+        class: sclass,
+        marks: {
+          bengali,
+          history,
+          geography,
+          education,
+          philosophy
+        },
+        fees: fees
+      };
+
+      db.ref("students/" + uid).set(data)
+        .then(() => alert("Student data updated successfully."))
+        .catch(err => alert("Error: " + err.message));
+    }
+
+    function addNotice() {
+      const text = document.getElementById("noticeText").value;
+      if (!text.trim()) return alert("Notice can't be empty.");
+      db.ref("notices").push({
+        text,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        alert("Notice added.");
+        document.getElementById("noticeText").value = "";
+      }).catch(err => alert("Error: " + err.message));
+    }
+
+    // Load messages
+    db.ref("messages").on("value", snapshot => {
+      const container = document.getElementById("messages-list");
+      container.innerHTML = "";
+      if (!snapshot.exists()) {
+        container.innerHTML = "<p>No messages found.</p>";
+        return;
+      }
+      const data = snapshot.val();
+      Object.values(data).reverse().forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("message");
+        div.innerHTML = `
+          <strong>${msg.name} (${msg.email})</strong><br/>
+          <p>${msg.message}</p>
+          <div class="timestamp">${new Date(msg.timestamp).toLocaleString()}</div>
+        `;
+        container.appendChild(div);
+      });
+    });
+  </script>
 </body>
 </html>
