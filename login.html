@@ -89,7 +89,6 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const database = firebase.database();
 
     function showSignUp() {
       document.getElementById("login-form").style.display = "none";
@@ -113,13 +112,6 @@
 
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          return database.ref("users/" + user.uid).set({
-            name, dob, phone, email, address,
-            role: "student"
-          });
-        })
-        .then(() => {
           alert("Account created successfully!");
           showLogin();
         })
@@ -136,7 +128,7 @@
         .then((userCredential) => {
           const user = userCredential.user;
 
-          // Check for specific admin email
+          // Direct email check
           if (user.email === "rajnitirgalpokotha@gmail.com") {
             window.location.href = "dashboard.html";
           } else {
