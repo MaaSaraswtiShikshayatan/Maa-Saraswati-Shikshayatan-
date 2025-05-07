@@ -1,93 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maa Saraswati Shikshayatan | Login</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <title>Login - Maa Saraswati Shikshayatan</title>
   <style>
     body {
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
       font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
-      max-width: 400px;
-      margin: 0 auto;
+      background: white;
       padding: 30px;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
     }
     h2 {
-      text-align: center;
-      margin-bottom: 20px;
+      color: #333;
     }
-    input[type="email"], input[type="password"], input[type="text"], input[type="tel"], input[type="date"] {
+    input {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 5px;
-      box-sizing: border-box;
     }
     button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
+      background-color: #2e86de;
       color: white;
+      padding: 10px 20px;
       border: none;
+      width: 100%;
       border-radius: 5px;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #45a049;
-    }
-    .footer {
-      text-align: center;
+    .toggle {
       margin-top: 10px;
-    }
-    .link {
-      color: #007bff;
+      color: #2e86de;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h2>Login</h2>
-    <!-- Login Form -->
+    <h2 id="form-title">Login</h2>
+
     <div id="login-form">
-      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="email" id="login-email" placeholder="Email or Mobile" required />
       <input type="password" id="login-password" placeholder="Password" required />
       <button onclick="login()">Login</button>
-      <p class="footer">
-        Don't have an account? <span class="link" onclick="showSignUp()">Sign Up</span>
-      </p>
+      <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
+      <div class="toggle" onclick="resetPassword()">Forgot password?</div>
     </div>
 
-    <!-- Sign Up Form (Initially Hidden) -->
-    <div id="sign-up-form" style="display: none;">
-      <input type="text" id="sign-up-name" placeholder="Full Name" required />
-      <input type="text" id="sign-up-father" placeholder="Father's Name (Optional)" />
-      <input type="text" id="sign-up-mother" placeholder="Mother's Name (Optional)" />
-      <input type="date" id="sign-up-dob" required />
-      <input type="tel" id="sign-up-phone" placeholder="Mobile Number" required />
-      <input type="email" id="sign-up-email" placeholder="Email" required />
-      <textarea id="sign-up-address" placeholder="Address" required></textarea>
-      <input type="file" id="sign-up-photo" accept="image/*" />
-      <input type="password" id="sign-up-password" placeholder="Password" required />
-      <button onclick="signUp()">Sign Up</button>
-      <p class="footer">
-        Already have an account? <span class="link" onclick="showLogin()">Login</span>
-      </p>
+    <div id="signup-form" style="display:none;">
+      <input type="text" id="name" placeholder="Full Name" />
+      <input type="text" id="dob" placeholder="Date of Birth" />
+      <input type="text" id="phone" placeholder="Phone Number" />
+      <input type="email" id="email" placeholder="Email Address" />
+      <input type="text" id="address" placeholder="Address" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="signup()">Sign Up</button>
+      <div class="toggle" onclick="showLogin()">Already have an account? Login</div>
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <script>
+    // Your Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
@@ -98,70 +87,77 @@
       appId: "1:1086364385293:web:91e762be2245715e26d544",
       measurementId: "G-CRKFKKBEQN"
     };
-
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
 
-    function login() {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-
-      auth.signInWithEmailAndPassword(email, password).then(userCredential => {
-        const user = userCredential.user;
-        window.location.href = user.email === "admin@example.com" ? "dashboard.html" : "student-dashboard.html";
-      }).catch(error => {
-        alert(error.message);
-      });
-    }
-
     function showSignUp() {
-      document.getElementById('login-form').style.display = 'none';
-      document.getElementById('sign-up-form').style.display = 'block';
+      document.getElementById("login-form").style.display = "none";
+      document.getElementById("signup-form").style.display = "block";
+      document.getElementById("form-title").innerText = "Sign Up";
     }
 
     function showLogin() {
-      document.getElementById('sign-up-form').style.display = 'none';
-      document.getElementById('login-form').style.display = 'block';
+      document.getElementById("login-form").style.display = "block";
+      document.getElementById("signup-form").style.display = "none";
+      document.getElementById("form-title").innerText = "Login";
     }
 
-    function signUp() {
-      const name = document.getElementById('sign-up-name').value;
-      const father = document.getElementById('sign-up-father').value;
-      const mother = document.getElementById('sign-up-mother').value;
-      const dob = document.getElementById('sign-up-dob').value;
-      const phone = document.getElementById('sign-up-phone').value;
-      const email = document.getElementById('sign-up-email').value;
-      const address = document.getElementById('sign-up-address').value;
-      const password = document.getElementById('sign-up-password').value;
+    function signup() {
+      const name = document.getElementById("name").value;
+      const dob = document.getElementById("dob").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const password = document.getElementById("password").value;
 
-      auth.createUserWithEmailAndPassword(email, password).then(userCredential => {
-        const user = userCredential.user;
-        const userId = user.uid;
-        const photo = document.getElementById('sign-up-photo').files[0];
-
-        // Save user data to Firebase Realtime Database
-        const userRef = database.ref('users/' + userId);
-        userRef.set({
-          name: name,
-          father: father,
-          mother: mother,
-          dob: dob,
-          phone: phone,
-          email: email,
-          address: address,
-          photo: photo ? photo.name : null
-        }).then(() => {
-          alert("User registered successfully!");
-          window.location.href = "login.html";
-        }).catch(error => {
-          alert(error.message);
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          return database.ref("users/" + user.uid).set({
+            name, dob, phone, email, address,
+            role: "student"  // Default role
+          });
+        })
+        .then(() => {
+          alert("Account created successfully!");
+          showLogin();
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
         });
-      }).catch(error => {
-        alert(error.message);
-      });
+    }
+
+    function login() {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          return database.ref('users/' + user.uid + '/role').once('value')
+            .then(snapshot => {
+              const role = snapshot.val();
+              if (role === "admin") {
+                window.location.href = "dashboard.html";
+              } else {
+                window.location.href = "student-dashboard.html";
+              }
+            });
+        })
+        .catch((error) => {
+          alert("Login failed: " + error.message);
+        });
+    }
+
+    function resetPassword() {
+      const email = prompt("Enter your email to reset password:");
+      if (email) {
+        auth.sendPasswordResetEmail(email)
+          .then(() => alert("Password reset link sent to your email."))
+          .catch(err => alert("Error: " + err.message));
+      }
     }
   </script>
-
 </body>
 </html>
