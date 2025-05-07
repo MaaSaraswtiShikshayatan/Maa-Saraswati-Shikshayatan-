@@ -3,70 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Maa Saraswati Shikshayatan</title>
+  <title>Maa Saraswati Shikshayatan | Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #4b8eff, #2bb0ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background-color: #f7f7f7;
+      padding: 20px;
     }
-    .login-container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    .container {
       max-width: 400px;
-      width: 100%;
-      text-align: center;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
     }
     h2 {
+      text-align: center;
       margin-bottom: 20px;
     }
-    input {
-      width: 90%;
-      padding: 12px;
+    input[type="email"], input[type="password"], input[type="text"], input[type="tel"], input[type="date"] {
+      width: 100%;
+      padding: 10px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
     button {
-      padding: 12px 20px;
-      background-color: #4b8eff;
-      border: none;
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
       color: white;
-      font-size: 16px;
-      border-radius: 6px;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #2a72e0;
+      background-color: #45a049;
     }
-    #status {
-      margin-top: 15px;
-      color: red;
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .link {
+      color: #007bff;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
+
+  <div class="container">
     <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <br />
-    <button onclick="loginUser()">Login</button>
-    <p id="status"></p>
+    <!-- Login Form -->
+    <div id="login-form">
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button onclick="login()">Login</button>
+      <p class="footer">
+        Don't have an account? <span class="link" onclick="showSignUp()">Sign Up</span>
+      </p>
+    </div>
+
+    <!-- Sign Up Form (Initially Hidden) -->
+    <div id="sign-up-form" style="display: none;">
+      <input type="text" id="sign-up-name" placeholder="Full Name" required />
+      <input type="text" id="sign-up-father" placeholder="Father's Name (Optional)" />
+      <input type="text" id="sign-up-mother" placeholder="Mother's Name (Optional)" />
+      <input type="date" id="sign-up-dob" required />
+      <input type="tel" id="sign-up-phone" placeholder="Mobile Number" required />
+      <input type="email" id="sign-up-email" placeholder="Email" required />
+      <textarea id="sign-up-address" placeholder="Address" required></textarea>
+      <input type="file" id="sign-up-photo" accept="image/*" />
+      <input type="password" id="sign-up-password" placeholder="Password" required />
+      <button onclick="signUp()">Sign Up</button>
+      <p class="footer">
+        Already have an account? <span class="link" onclick="showLogin()">Login</span>
+      </p>
+    </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
@@ -78,27 +99,69 @@
       measurementId: "G-CRKFKKBEQN"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
 
-    window.loginUser = function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const status = document.getElementById("status");
+    function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          if (email.includes("admin")) {
-            window.location.href = "dashboard.html";
-          } else {
-            window.location.href = "student-dashboard.html";
-          }
-        })
-        .catch((error) => {
-          status.innerText = "Login failed: " + error.message;
+      auth.signInWithEmailAndPassword(email, password).then(userCredential => {
+        const user = userCredential.user;
+        window.location.href = user.email === "admin@example.com" ? "admin-dashboard.html" : "student-dashboard.html";
+      }).catch(error => {
+        alert(error.message);
+      });
+    }
+
+    function showSignUp() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('sign-up-form').style.display = 'block';
+    }
+
+    function showLogin() {
+      document.getElementById('sign-up-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+    }
+
+    function signUp() {
+      const name = document.getElementById('sign-up-name').value;
+      const father = document.getElementById('sign-up-father').value;
+      const mother = document.getElementById('sign-up-mother').value;
+      const dob = document.getElementById('sign-up-dob').value;
+      const phone = document.getElementById('sign-up-phone').value;
+      const email = document.getElementById('sign-up-email').value;
+      const address = document.getElementById('sign-up-address').value;
+      const password = document.getElementById('sign-up-password').value;
+
+      auth.createUserWithEmailAndPassword(email, password).then(userCredential => {
+        const user = userCredential.user;
+        const userId = user.uid;
+        const photo = document.getElementById('sign-up-photo').files[0];
+
+        // Save user data to Firebase Realtime Database
+        const userRef = database.ref('users/' + userId);
+        userRef.set({
+          name: name,
+          father: father,
+          mother: mother,
+          dob: dob,
+          phone: phone,
+          email: email,
+          address: address,
+          photo: photo ? photo.name : null
+        }).then(() => {
+          alert("User registered successfully!");
+          window.location.href = "login.html";
+        }).catch(error => {
+          alert(error.message);
         });
-    };
+      }).catch(error => {
+        alert(error.message);
+      });
+    }
   </script>
+
 </body>
 </html>
