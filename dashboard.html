@@ -1,169 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard - Maa Saraswati Shikshayatan</title>
+  <meta charset="UTF-8" />
+  <title>Student Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #eef2f7;
-      padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
     }
-    h1, h2 {
-      text-align: center;
-      color: #2e86de;
-    }
-    .section {
-      background: white;
+
+    .container {
       max-width: 900px;
-      margin: 30px auto;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
     }
-    .section label {
+
+    .card h2 {
+      margin-top: 0;
+      color: #ffd700;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 5px;
+    }
+
+    .logout {
       display: block;
-      margin-top: 10px;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background: #ff5252;
+      border: none;
+      color: #fff;
       font-weight: bold;
-    }
-    input, textarea, select, button {
-      width: 100%;
-      margin: 5px 0 15px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
       border-radius: 5px;
-    }
-    button {
-      background-color: #2e86de;
-      color: white;
       cursor: pointer;
     }
-    .message {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-    }
-    .timestamp {
-      font-size: 12px;
-      color: gray;
+
+    .logout:hover {
+      background: #ff1744;
     }
   </style>
 </head>
 <body>
 
-  <h1>Admin Dashboard</h1>
+<div class="container">
+  <header>
+    <h1>Welcome, <span id="student-name">Student</span></h1>
+    <p>Your personalized dashboard</p>
+  </header>
 
-  <!-- Student Data Section -->
-  <div class="section">
-    <h2>Update Student Data</h2>
-    <label>Student UID</label>
-    <input type="text" id="uid" placeholder="Enter Firebase UID" required />
-
-    <label>Name</label>
-    <input type="text" id="sname" placeholder="Student Name" />
-
-    <label>Class</label>
-    <select id="class">
-      <option value="9">Class 9</option>
-      <option value="10">Class 10</option>
-      <option value="11">Class 11</option>
-      <option value="12">Class 12</option>
-    </select>
-
-    <label>Subject Marks</label>
-    <input type="text" id="bengali" placeholder="Bengali Marks" />
-    <input type="text" id="history" placeholder="History Marks" />
-    <input type="text" id="geography" placeholder="Geography Marks" />
-    <input type="text" id="education" placeholder="Education Marks (Class 11/12)" />
-    <input type="text" id="philosophy" placeholder="Philosophy Marks (Class 11/12)" />
-
-    <label>Fees Paid (₹)</label>
-    <input type="text" id="fees" placeholder="Total Paid Fees" />
-
-    <button onclick="updateStudent()">Update Student Info</button>
+  <div class="card">
+    <h2>Your Results</h2>
+    <ul id="result-list">
+      <li>Loading results...</li>
+    </ul>
   </div>
 
-  <!-- Notice Section -->
-  <div class="section">
-    <h2>Add Notice</h2>
-    <textarea id="noticeText" placeholder="Write a new notice here..."></textarea>
-    <button onclick="addNotice()">Add Notice</button>
+  <div class="card">
+    <h2>Fee Status</h2>
+    <ul id="fee-status">
+      <li>Loading fees...</li>
+    </ul>
   </div>
 
-  <!-- Contact Messages Viewer -->
-  <div class="section">
-    <h2>Contact Messages</h2>
-    <div id="messages-list">Loading messages...</div>
+  <div class="card">
+    <h2>Notices</h2>
+    <ul id="student-notices">
+      <li>Loading notices...</li>
+    </ul>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="firebase-config.js"></script>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-  <script>
-    const db = firebase.database();
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
 
-    function updateStudent() {
-      const uid = document.getElementById("uid").value;
-      const sname = document.getElementById("sname").value;
-      const sclass = document.getElementById("class").value;
-      const bengali = document.getElementById("bengali").value;
-      const history = document.getElementById("history").value;
-      const geography = document.getElementById("geography").value;
-      const education = document.getElementById("education").value;
-      const philosophy = document.getElementById("philosophy").value;
-      const fees = document.getElementById("fees").value;
+<script>
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+      location.href = 'login.html';
+    } else {
+      const uid = user.uid;
 
-      const data = {
-        name: sname,
-        class: sclass,
-        marks: {
-          bengali,
-          history,
-          geography,
-          education,
-          philosophy
-        },
-        fees: fees
-      };
-
-      db.ref("students/" + uid).set(data)
-        .then(() => alert("Student data updated successfully."))
-        .catch(err => alert("Error: " + err.message));
-    }
-
-    function addNotice() {
-      const text = document.getElementById("noticeText").value;
-      if (!text.trim()) return alert("Notice can't be empty.");
-      db.ref("notices").push({
-        text,
-        timestamp: new Date().toISOString()
-      }).then(() => {
-        alert("Notice added.");
-        document.getElementById("noticeText").value = "";
-      }).catch(err => alert("Error: " + err.message));
-    }
-
-    // Load messages
-    db.ref("messages").on("value", snapshot => {
-      const container = document.getElementById("messages-list");
-      container.innerHTML = "";
-      if (!snapshot.exists()) {
-        container.innerHTML = "<p>No messages found.</p>";
-        return;
-      }
-      const data = snapshot.val();
-      Object.values(data).reverse().forEach(msg => {
-        const div = document.createElement("div");
-        div.classList.add("message");
-        div.innerHTML = `
-          <strong>${msg.name} (${msg.email})</strong><br/>
-          <p>${msg.message}</p>
-          <div class="timestamp">${new Date(msg.timestamp).toLocaleString()}</div>
-        `;
-        container.appendChild(div);
+      // Get student name (optional)
+      firebase.database().ref(`students/${uid}/name`).once('value', snapshot => {
+        document.getElementById('student-name').textContent = snapshot.val() || "Student";
       });
+
+      // Load results
+      firebase.database().ref(`results/${uid}`).on('value', snapshot => {
+        const list = document.getElementById('result-list');
+        list.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) return list.innerHTML = '<li>No results found.</li>';
+        Object.entries(data).forEach(([subject, score]) => {
+          list.innerHTML += `<li><strong>${subject}</strong>: ${score}</li>`;
+        });
+      });
+
+      // Load fees
+      firebase.database().ref(`fees/${uid}`).on('value', snapshot => {
+        const list = document.getElementById('fee-status');
+        list.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) return list.innerHTML = '<li>No fee data available.</li>';
+        Object.entries(data).forEach(([month, status]) => {
+          list.innerHTML += `<li><strong>${month}</strong>: ${status}</li>`;
+        });
+      });
+
+      // Load notices (common for all students)
+      firebase.database().ref("notices").on("value", snapshot => {
+        const list = document.getElementById('student-notices');
+        list.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) return list.innerHTML = '<li>No notices.</li>';
+        Object.values(data).reverse().forEach(n => {
+          list.innerHTML += `<li><strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}</li>`;
+        });
+      });
+    }
+  });
+
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      location.href = "login.html";
     });
-  </script>
+  }
+</script>
+
 </body>
 </html>
