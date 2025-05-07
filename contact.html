@@ -69,11 +69,30 @@
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+
   <script>
     function sendMessage(event) {
       event.preventDefault();
-      alert("Your message has been sent. Thank you!");
-      // Firebase বা EmailJS ইন্টিগ্রেশন future enhancement হিসেবে যোগ করা যাবে
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
+
+      firebase.database().ref("messages").push({
+        name,
+        email,
+        message,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        alert("Message sent successfully!");
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("message").value = "";
+      }).catch((err) => {
+        alert("Error: " + err.message);
+      });
     }
   </script>
 </body>
