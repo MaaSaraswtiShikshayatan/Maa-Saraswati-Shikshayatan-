@@ -1,1 +1,80 @@
-<!-- Contact Us page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - Maa Saraswati Shikshayatan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    input, textarea {
+      margin: 10px 0;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2e86de;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .info {
+      margin-top: 30px;
+    }
+    .info p {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <form onsubmit="sendMessage(event)">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+    <div class="info">
+      <h3>Our Address</h3>
+      <p><strong>Coaching Name:</strong> Maa Saraswati Shikshayatan</p>
+      <p><strong>Location:</strong> Amtolighat, Kupadaha, Bamongola, Malda</p>
+      <p><strong>Phone:</strong> 9851123356</p>
+      <p><strong>Email:</strong> rajnitirgalpokotha@gmail.com</p>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage(event) {
+      event.preventDefault();
+      alert("Your message has been sent. Thank you!");
+      // Firebase বা EmailJS ইন্টিগ্রেশন future enhancement হিসেবে যোগ করা যাবে
+    }
+  </script>
+</body>
+</html>
