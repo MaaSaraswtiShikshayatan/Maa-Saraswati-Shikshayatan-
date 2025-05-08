@@ -50,14 +50,16 @@
   <div class="container">
     <h2 id="form-title">Login</h2>
 
+    <!-- Login Form -->
     <div id="login-form">
-      <input type="email" id="login-email" placeholder="Email or Mobile" required />
+      <input type="email" id="login-email" placeholder="Email" required />
       <input type="password" id="login-password" placeholder="Password" required />
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
       <div class="toggle" onclick="resetPassword()">Forgot password?</div>
     </div>
 
+    <!-- Signup Form -->
     <div id="signup-form" style="display:none;">
       <input type="text" id="name" placeholder="Full Name" />
       <input type="text" id="dob" placeholder="Date of Birth" />
@@ -76,19 +78,19 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Firebase Configuration
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
       databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
       projectId: "masaraswatishikshyatan",
-      storageBucket: "masaraswatishikshyatan.firebasestorage.app",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
       messagingSenderId: "1086364385293",
-      appId: "1:1086364385293:web:91e762be2245715e26d544",
-      measurementId: "G-CRKFKKBEQN"
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.database();
 
     function showSignUp() {
       document.getElementById("login-form").style.display = "none";
@@ -103,17 +105,43 @@
     }
 
     function signup() {
-      const name = document.getElementById("name").value;
+      const name = document.getElementById("name").value.trim();
       const dob = document.getElementById("dob").value;
       const phone = document.getElementById("phone").value;
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
 
+      if (!name || !email || !password) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          alert("Account created successfully!");
-          showLogin();
+          const user = userCredential.user;
+          const firstChar = name.charAt(0).toUpperCase();
+          const uidIndexRef = db.ref('uidIndex/' + firstChar);
+
+          uidIndexRef.transaction(current => (current || 0) + 1).then(result => {
+            const serial = result.snapshot.val().toString().padStart(2, '0');
+            const uid = firstChar + serial;
+
+            const studentData = {
+              name: name,
+              dob: dob,
+              phone: phone,
+              email: email,
+              address: address,
+              uid: uid
+            };
+
+            db.ref('students/' + uid).set(studentData)
+              .then(() => {
+                alert(`Account created successfully!\nYour UID is: ${uid}`);
+                showLogin();
+              });
+          });
         })
         .catch((error) => {
           alert("Error: " + error.message);
@@ -128,7 +156,7 @@
         .then((userCredential) => {
           const user = userCredential.user;
 
-          // Direct email check
+          // Admin Email Check
           if (user.email === "rajnitirgalpokotha@gmail.com") {
             window.location.href = "dashboard.html";
           } else {
