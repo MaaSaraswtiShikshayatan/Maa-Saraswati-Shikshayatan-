@@ -37,14 +37,61 @@
   </style>
 </head>
 <body>
-  <header>
-    Student Dashboard
-  </header>
+  <header>Student Dashboard</header>
   <div class="dashboard">
     <div class="card">My Attendance</div>
     <div class="card">Fee Status</div>
     <div class="card">Announcements</div>
     <div class="card">Contact School</div>
   </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref("students").once("value").then(snapshot => {
+          const students = snapshot.val();
+          let uid = null;
+          for (let id in students) {
+            if (students[id].email === user.email) {
+              uid = id;
+              break;
+            }
+          }
+          if (!uid) return;
+
+          db.ref("fees/" + uid).once("value", snap => {
+            const data = snap.val();
+            const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            let html = "<h3>Fee Status</h3><ul style='list-style:none;padding:0'>";
+            months.forEach(month => {
+              const status = data && data[month] ? data[month] : "Unpaid";
+              html += `<li>${month}: ${status}</li>`;
+            });
+            html += "</ul>";
+            const feeCard = document.querySelectorAll('.card')[1];
+            feeCard.innerHTML = html;
+          });
+        });
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 </body>
 </html>
