@@ -34,6 +34,13 @@
       border-radius: 6px;
       color: white;
     }
+    /* Add a new Feedback tab in the navbar */
+    nav a.feedback-tab {
+      background: #e67e22;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: white;
+    }
 
     /* Responsive nav for mobile */
     @media (max-width: 600px) {
@@ -52,13 +59,18 @@
       padding: 40px 20px;
       max-width: 900px;
       margin: auto;
+      background: white; /* White background for sections */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
+
     .hero {
       background: linear-gradient(135deg, #4ca1af, #2c3e50);
       color: white;
       padding: 60px 20px;
       text-align: center;
     }
+
     .notice-box, .profile-box {
       background: #ffffff;
       border-radius: 10px;
@@ -66,6 +78,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
       margin-top: 20px;
     }
+
     .notice {
       border-bottom: 1px solid #ccc;
       padding: 10px 0;
@@ -107,32 +120,40 @@
     /* Feedback Form Styling */
     .feedback-container {
       background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       border-radius: 8px;
       margin-top: 40px;
       text-align: center;
+      transition: transform 0.3s ease;
     }
+
     .feedback-container h3 {
       margin-bottom: 20px;
       color: #2c3e50;
     }
+
     .feedback-container textarea {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
       resize: vertical;
+      font-size: 16px;
     }
+
     .feedback-container button {
       background-color: #e67e22;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
     }
+
     .feedback-container button:hover {
       background-color: #d35400;
     }
@@ -159,7 +180,7 @@
     <a href="#admission">Admission</a>
     <a href="#notices">Notices</a>
     <a href="#gallery">Gallery</a>
-    <a href="#feedback">Feedback</a>
+    <a href="#feedback" class="feedback-tab">Feedback</a> <!-- New Feedback Tab -->
     <a href="#contact">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
