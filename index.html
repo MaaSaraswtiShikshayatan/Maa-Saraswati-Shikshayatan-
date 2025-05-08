@@ -83,30 +83,23 @@
       position: relative;
       max-width: 900px;
       margin: 40px auto;
-      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .gallery-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
     }
     .gallery-slide {
-      display: none;
-      width: 100%;
-      transition: opacity 1s ease-in-out;
-      filter: blur(5px);
+      min-width: 100%;
+      transition: transform 0.5s ease;
     }
     .gallery-slide img {
       width: 100%;
+      border-radius: 10px;
       display: block;
-    }
-
-    .gallery-slide.active {
-      display: block;
-      opacity: 1;
-      filter: blur(0);
-    }
-
-    .gallery-slide.inactive {
-      opacity: 0;
-      filter: blur(5px);
     }
 
     footer {
@@ -171,12 +164,14 @@
   <section class="section" id="gallery">
     <h2>Photo Gallery</h2>
     <div class="gallery-container">
-      <div class="gallery-slide active"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image 1"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image 2"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image 3"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image 4"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image 5"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image 6"></div>
+      <div class="gallery-slides">
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image 1"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image 2"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image 3"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image 4"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image 5"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image 6"></div>
+      </div>
     </div>
   </section>
 
@@ -224,26 +219,18 @@
       noticeBox.innerHTML = html;
     });
 
-    // Gallery Slideshow with Blur Effect
+    // Gallery Slideshow (Side by Side)
     let slideIndex = 0;
-    const slides = document.querySelectorAll(".gallery-slide");
+    const gallerySlides = document.querySelector('.gallery-slides');
 
-    function showSlides() {
-      slides.forEach((slide, index) => {
-        if (index === slideIndex) {
-          slide.classList.add('active');
-          slide.classList.remove('inactive');
-        } else {
-          slide.classList.add('inactive');
-          slide.classList.remove('active');
-        }
-      });
+    function slideGallery() {
       slideIndex++;
-      if (slideIndex >= slides.length) { slideIndex = 0; }
-      setTimeout(showSlides, 3000); // 3 seconds delay
+      if (slideIndex >= 6) { slideIndex = 0; }
+      gallerySlides.style.transform = `translateX(-${slideIndex * 100}%)`;
+      setTimeout(slideGallery, 3000); // 3 seconds delay
     }
 
-    showSlides();
+    slideGallery();
   </script>
 </body>
 </html>
