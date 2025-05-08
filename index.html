@@ -6,10 +6,10 @@
   <title>Maa Saraswati Shikshayatan</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f6f7;
+      background-color: #f4f6f7;
     }
     header {
       background: #2c3e50;
@@ -28,26 +28,9 @@
       text-decoration: none;
       font-weight: bold;
     }
-    nav a.login-button {
-      background: #e67e22;
-      padding: 6px 12px;
-      border-radius: 6px;
-      color: white;
+    nav a:hover {
+      color: #e67e22;
     }
-
-    /* Responsive nav for mobile */
-    @media (max-width: 600px) {
-      nav {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-
     .section {
       padding: 40px 20px;
       max-width: 900px;
@@ -59,7 +42,7 @@
       padding: 60px 20px;
       text-align: center;
     }
-    .notice-box, .profile-box, .feedback-box {
+    .notice-box, .profile-box, .feedback-form, .feedback-container {
       background: #ffffff;
       border-radius: 10px;
       padding: 20px;
@@ -77,28 +60,20 @@
       color: #888;
       font-size: 12px;
     }
-
-    /* Gallery Styling */
     .gallery-container {
-      position: relative;
-      max-width: 900px;
-      margin: 40px auto;
-      overflow: hidden;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      overflow: hidden;
+      margin-top: 30px;
     }
     .gallery-slide {
-      width: 48%;
-      margin-bottom: 20px;
+      width: 100%;
+      transition: transform 0.5s ease;
     }
     .gallery-slide img {
       width: 100%;
-      height: auto;
       border-radius: 10px;
       display: block;
     }
-
     footer {
       background: #2c3e50;
       color: white;
@@ -107,7 +82,7 @@
       margin-top: 40px;
     }
 
-    /* Feedback Form Styling */
+    /* Feedback Section */
     .feedback-form input, .feedback-form textarea {
       width: 100%;
       padding: 10px;
@@ -126,6 +101,26 @@
     .feedback-form button:hover {
       background-color: #2ecc71;
     }
+
+    .feedback-item {
+      padding: 15px;
+      margin: 10px 0;
+      border-bottom: 1px solid #ddd;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+    .feedback-item:last-child {
+      border-bottom: none;
+    }
+    .feedback-item p {
+      margin: 0;
+    }
+    .feedback-container {
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
@@ -142,7 +137,6 @@
     <a href="#notices">Notices</a>
     <a href="#gallery">Gallery</a>
     <a href="#feedback">Feedback</a>
-    <a href="#contact">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
 
@@ -162,7 +156,7 @@
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
-      <p>Admission is open for academic year 2025. Students from Class V to XII are welcome to apply. We offer specialized coaching in all major subjects including Mathematics, Science, and English.</p>
+      <p>Admission is open for the academic year 2025. Students from Class V to XII are welcome to apply. We offer specialized coaching in all major subjects including Mathematics, Science, and English.</p>
       <p><strong>How to Apply:</strong></p>
       <ul>
         <li>Visit our coaching center with previous academic records.</li>
@@ -182,53 +176,80 @@
   <section class="section" id="gallery">
     <h2>Photo Gallery</h2>
     <div class="gallery-container">
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image 1"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image 2"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image 3"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image 4"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image 5"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 6"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image 7"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image 8"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image 9"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image 10"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image 11"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image 12"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image 13"></div>
-      <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 14"></div>
+      <div class="gallery-slides">
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image 1"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image 2"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image 3"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image 4"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image 5"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 6"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image 7"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image 8"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image 9"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image 10"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image 11"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image 12"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image 13"></div>
+      </div>
     </div>
   </section>
 
   <section class="section" id="feedback">
-    <h2>Student Feedback</h2>
-    <div class="feedback-box">
-      <form class="feedback-form" onsubmit="return validateFeedback()">
-        <label for="feedback-name">Name:</label>
-        <input type="text" id="feedback-name" required>
-        
-        <label for="feedback-message">Feedback:</label>
-        <textarea id="feedback-message" rows="5" required></textarea>
-        
-        <button type="submit">Submit Feedback</button>
-      </form>
+    <h2>Submit Your Feedback</h2>
+    <div class="feedback-form">
+      <input type="text" id="feedback-name" placeholder="Your Name" required>
+      <textarea id="feedback-message" rows="5" placeholder="Your Feedback" required></textarea>
+      <button onclick="submitFeedback(event)">Submit Feedback</button>
+    </div>
+
+    <h2>All Feedbacks</h2>
+    <div class="feedback-container" id="feedback-list">
+      <p>Loading feedback...</p>
     </div>
   </section>
 
-  <footer id="contact">
+  <footer>
     <p><strong>Address:</strong> Amtolighat, Kupadaha, Bamongola, Malda, 733142</p>
     <p><strong>Phone:</strong> +91-9851123356 </p>
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All rights reserved.</p>
   </footer>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
-    function validateFeedback() {
-      const feedbackMessage = document.getElementById('feedback-message').value;
-      if (feedbackMessage.toLowerCase().includes('bad') || feedbackMessage.toLowerCase().includes('negative')) {
-        alert('Only positive feedback is allowed.');
-        return false; // Prevents form submission
-      }
-      return true;
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Submit feedback
+    function submitFeedback(event) {
+      event.preventDefault();
+      const name = document.getElementById('feedback-name').value;
+      const message = document.getElementById('feedback-message').value;
+      const feedback = {
+        name: name,
+        message: message,
+        timestamp: new Date().toISOString()
+      };
+      db.ref('feedbacks').push(feedback)
+        .then(() => {
+          document.getElementById('feedback-name').value = '';
+          document.getElementById('feedback-message').value = '';
+        })
+        .catch(error => {
+          console.error('Error submitting feedback: ', error);
+        });
     }
-  </script>
-</body>
-</html>
+
+    // Display feedbacks
+    function display
