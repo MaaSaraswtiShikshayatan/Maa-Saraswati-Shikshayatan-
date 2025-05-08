@@ -2,140 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Fee Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #283048, #859398);
-      color: white;
+      background: #f2f2f2;
       padding: 20px;
+      text-align: center;
     }
     .box {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 10px;
+      background: white;
       max-width: 600px;
       margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    input, button, select {
+    input, select, button {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
+      margin: 10px 0;
+      font-size: 16px;
     }
-    button {
-      background: gold;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 0;
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background: #333;
+      color: white;
     }
   </style>
 </head>
 <body>
 
-  <h2>Admin Panel - Update Student Records</h2>
+  <h2>Student Fee Management</h2>
 
   <div class="box">
-    <label>Enter Student Name:</label>
-    <input type="text" id="search-name" placeholder="e.g., Rahul" />
-    <button onclick="findStudent()">Search</button>
-    <div id="student-info" style="margin-top: 20px;"></div>
-  </div>
-
-  <div class="box" id="actions" style="display: none;">
-    <h3>Attendance</h3>
-    <input type="text" id="att-month" placeholder="Month (e.g. May)">
-    <select id="att-status">
-      <option value="Present">Present</option>
-      <option value="Absent">Absent</option>
+    <input type="text" id="uid" placeholder="Enter Student UID (e.g. R01)" />
+    
+    <select id="month">
+      <option value="">Select Month</option>
+      <option>January</option>
+      <option>February</option>
+      <option>March</option>
+      <option>April</option>
+      <option>May</option>
+      <option>June</option>
+      <option>July</option>
+      <option>August</option>
+      <option>September</option>
+      <option>October</option>
+      <option>November</option>
+      <option>December</option>
     </select>
-    <button onclick="updateAttendance()">Save Attendance</button>
 
-    <h3>Fee</h3>
-    <input type="text" id="fee-month" placeholder="Month (e.g. May)">
-    <select id="fee-status">
+    <select id="status">
       <option value="Paid">Paid</option>
       <option value="Unpaid">Unpaid</option>
     </select>
+
     <button onclick="updateFee()">Save Fee</button>
 
-    <h3>Result</h3>
-    <input type="text" id="res-subject" placeholder="Subject (e.g. Math)">
-    <input type="number" id="res-score" placeholder="Marks">
-    <button onclick="updateResult()">Save Result</button>
+    <button onclick="loadFeeStatus()">Show Full Year Report</button>
+
+    <div id="report"></div>
   </div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="firebase-config.js"></script>
-
   <script>
-    let currentUID = null;
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user || user.email !== "rajnitirgalpokotha@gmail.com") {
-        location.href = "login.html";
-      }
-    });
-
-    function findStudent() {
-      const name = document.getElementById("search-name").value.trim().toLowerCase();
-      if (!name) return alert("Enter a student name");
-
-      firebase.database().ref("students").once("value", snapshot => {
-        const data = snapshot.val();
-        let found = false;
-        for (const uid in data) {
-          const stu = data[uid];
-          if (stu.name.trim().toLowerCase() === name) {
-            currentUID = uid;
-            document.getElementById("student-info").innerHTML = `
-              <strong>Name:</strong> ${stu.name}<br>
-              <strong>UID:</strong> ${uid}<br>
-              <strong>Email:</strong> ${stu.email}<br><br>
-              <strong>Ready to update records below.</strong>
-            `;
-            document.getElementById("actions").style.display = "block";
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          document.getElementById("student-info").innerHTML = "<span style='color:red'>Student not found.</span>";
-          document.getElementById("actions").style.display = "none";
-        }
-      });
-    }
-
-    function updateAttendance() {
-      const month = document.getElementById("att-month").value;
-      const status = document.getElementById("att-status").value;
-      if (!currentUID || !month) return alert("Fill all attendance fields");
-      firebase.database().ref(`attendance/${currentUID}/${month}`).set(status);
-      alert("Attendance updated");
-    }
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.firebasestorage.app",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544",
+      measurementId: "G-CRKFKKBEQN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
     function updateFee() {
-      const month = document.getElementById("fee-month").value;
-      const status = document.getElementById("fee-status").value;
-      if (!currentUID || !month) return alert("Fill all fee fields");
-      firebase.database().ref(`fees/${currentUID}/${month}`).set(status);
-      alert("Fee updated");
+      const uid = document.getElementById("uid").value.trim();
+      const month = document.getElementById("month").value;
+      const status = document.getElementById("status").value;
+
+      if (!uid || !month || !status) return alert("Fill all fields!");
+
+      db.ref(`fees/${uid}/${month}`).set(status)
+        .then(() => alert("Fee status updated!"))
+        .catch(err => alert("Error: " + err.message));
     }
 
-    function updateResult() {
-      const subject = document.getElementById("res-subject").value;
-      const score = document.getElementById("res-score").value;
-      if (!currentUID || !subject) return alert("Fill all result fields");
-      firebase.database().ref(`results/${currentUID}/${subject}`).set(score);
-      alert("Result updated");
+    function loadFeeStatus() {
+      const uid = document.getElementById("uid").value.trim();
+      if (!uid) return alert("Enter UID first");
+
+      db.ref(`fees/${uid}`).once("value", snapshot => {
+        const data = snapshot.val();
+        const months = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        let paid = 0;
+        let unpaid = 0;
+
+        let html = `<table><tr><th>Month</th><th>Status</th></tr>`;
+        months.forEach(month => {
+          const status = data && data[month] ? data[month] : "Unpaid";
+          if (status === "Paid") paid++;
+          else unpaid++;
+          html += `<tr><td>${month}</td><td>${status}</td></tr>`;
+        });
+        html += `</table><p><strong>Total Paid:</strong> ${paid} / 12</p>`;
+        document.getElementById("report").innerHTML = html;
+      });
     }
   </script>
 
