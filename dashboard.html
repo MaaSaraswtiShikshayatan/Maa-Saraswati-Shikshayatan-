@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Fee Panel</title>
+  <title>Admin Panel - Maa Saraswati Shikshayatan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      background: #ecf0f1;
       padding: 20px;
       text-align: center;
     }
@@ -19,16 +19,22 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    input, select, button {
+    input, select, textarea, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
     }
+    h2 {
+      background: #34495e;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 10px;
     }
     th, td {
       padding: 10px;
@@ -38,15 +44,27 @@
       background: #333;
       color: white;
     }
+    .section-title {
+      margin-top: 50px;
+      font-size: 22px;
+      color: #2c3e50;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Student Fee Management</h2>
+  <h2>Admin Dashboard</h2>
 
+  <!-- Student Profile and Fee Section -->
   <div class="box">
+    <h3>Search Student by UID</h3>
     <input type="text" id="uid" placeholder="Enter Student UID (e.g. R01)" />
-    
+    <button onclick="loadStudent()">Load Student Profile & Fees</button>
+
+    <div id="student-profile"></div>
+    <div id="report"></div>
+
+    <h4>Update Monthly Fee</h4>
     <select id="month">
       <option value="">Select Month</option>
       <option>January</option>
@@ -62,17 +80,26 @@
       <option>November</option>
       <option>December</option>
     </select>
-
     <select id="status">
       <option value="Paid">Paid</option>
       <option value="Unpaid">Unpaid</option>
     </select>
-
     <button onclick="updateFee()">Save Fee</button>
+  </div>
 
-    <button onclick="loadFeeStatus()">Show Full Year Report</button>
+  <!-- Notice Section -->
+  <div class="box">
+    <h3 class="section-title">Post a Notice</h3>
+    <textarea id="notice" placeholder="Enter notice content..."></textarea>
+    <button onclick="postNotice()">Publish Notice</button>
+  </div>
 
-    <div id="report"></div>
+  <!-- Result Upload Section -->
+  <div class="box">
+    <h3 class="section-title">Upload Student Result</h3>
+    <input type="text" id="result-uid" placeholder="Enter UID" />
+    <textarea id="result-data" placeholder="Enter result details..."></textarea>
+    <button onclick="uploadResult()">Upload Result</button>
   </div>
 
   <!-- Firebase -->
@@ -84,10 +111,9 @@
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
       databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
       projectId: "masaraswatishikshyatan",
-      storageBucket: "masaraswatishikshyatan.firebasestorage.app",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
       messagingSenderId: "1086364385293",
-      appId: "1:1086364385293:web:91e762be2245715e26d544",
-      measurementId: "G-CRKFKKBEQN"
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -96,39 +122,73 @@
       const uid = document.getElementById("uid").value.trim();
       const month = document.getElementById("month").value;
       const status = document.getElementById("status").value;
-
       if (!uid || !month || !status) return alert("Fill all fields!");
-
       db.ref(`fees/${uid}/${month}`).set(status)
         .then(() => alert("Fee status updated!"))
         .catch(err => alert("Error: " + err.message));
     }
 
-    function loadFeeStatus() {
+    function loadStudent() {
       const uid = document.getElementById("uid").value.trim();
       if (!uid) return alert("Enter UID first");
 
-      db.ref(`fees/${uid}`).once("value", snapshot => {
-        const data = snapshot.val();
-        const months = [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-        ];
-        let paid = 0;
-        let unpaid = 0;
+      // Load Profile
+      db.ref("students/" + uid).once("value").then(snap => {
+        const student = snap.val();
+        if (!student) {
+          document.getElementById("student-profile").innerHTML = "<p>No student found.</p>";
+          return;
+        }
 
-        let html = `<table><tr><th>Month</th><th>Status</th></tr>`;
-        months.forEach(month => {
-          const status = data && data[month] ? data[month] : "Unpaid";
-          if (status === "Paid") paid++;
-          else unpaid++;
-          html += `<tr><td>${month}</td><td>${status}</td></tr>`;
+        let profileHTML = `<h4>Student Profile</h4>
+          <p><strong>Name:</strong> ${student.name}</p>
+          <p><strong>Email:</strong> ${student.email}</p>
+          <p><strong>DOB:</strong> ${student.dob}</p>
+          <p><strong>Phone:</strong> ${student.phone}</p>
+          <p><strong>Address:</strong> ${student.address}</p>`;
+        document.getElementById("student-profile").innerHTML = profileHTML;
+
+        // Load Fee Status
+        db.ref(`fees/${uid}`).once("value", snapshot => {
+          const data = snapshot.val();
+          const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          let paid = 0;
+          let html = `<table><tr><th>Month</th><th>Status</th></tr>`;
+          months.forEach(month => {
+            const status = data && data[month] ? data[month] : "Unpaid";
+            if (status === "Paid") paid++;
+            html += `<tr><td>${month}</td><td>${status}</td></tr>`;
+          });
+          html += `</table><p><strong>Total Paid:</strong> ${paid} / 12</p>`;
+          document.getElementById("report").innerHTML = html;
         });
-        html += `</table><p><strong>Total Paid:</strong> ${paid} / 12</p>`;
-        document.getElementById("report").innerHTML = html;
       });
     }
-  </script>
 
+    function postNotice() {
+      const notice = document.getElementById("notice").value.trim();
+      if (!notice) return alert("Enter a notice first.");
+      const timestamp = new Date().toISOString();
+      db.ref("notices").push({ message: notice, date: timestamp })
+        .then(() => {
+          alert("Notice posted!");
+          document.getElementById("notice").value = "";
+        });
+    }
+
+    function uploadResult() {
+      const uid = document.getElementById("result-uid").value.trim();
+      const result = document.getElementById("result-data").value.trim();
+      if (!uid || !result) return alert("Fill both UID and result.");
+      db.ref("results/" + uid).set({ result: result })
+        .then(() => {
+          alert("Result uploaded!");
+          document.getElementById("result-data").value = "";
+        });
+    }
+  </script>
 </body>
 </html>
