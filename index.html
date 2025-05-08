@@ -104,6 +104,41 @@
       display: block;
     }
 
+    /* Tab Styling */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #34495e;
+      margin-top: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      border: 1px solid #2c3e50;
+      border-right: none;
+      text-align: center;
+    }
+    .tab:last-child {
+      border-right: 1px solid #2c3e50;
+    }
+    .tab:hover {
+      background-color: #e67e22;
+    }
+
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .active-tab {
+      display: block;
+    }
+
     /* Feedback Form Styling */
     .feedback-container {
       background-color: #ffffff;
@@ -124,6 +159,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       resize: vertical;
+      font-size: 16px;
     }
     .feedback-container button {
       background-color: #e67e22;
@@ -201,6 +237,7 @@
     <h2>Photo Gallery</h2>
     <div class="gallery-container">
       <div class="gallery-slides">
+        <!-- Add your 14 image links here -->
         <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image 1"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image 2"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image 3"></div>
@@ -208,11 +245,24 @@
         <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image 5"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 6"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image 7"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 8"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image 9"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image 10"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image 11"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image 12"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image 13"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 14"></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="feedback">
+  <!-- Tabs for feedback -->
+  <div class="tabs">
+    <div class="tab" onclick="showTab('feedback')">Feedback</div>
+  </div>
+
+  <!-- Feedback Section -->
+  <section class="section tab-content" id="feedback-section">
     <div class="feedback-container">
       <h3>We value your feedback</h3>
       <textarea id="feedback-text" rows="4" placeholder="Write your feedback..."></textarea>
@@ -271,7 +321,7 @@
 
     function slideGallery() {
       slideIndex++;
-      if (slideIndex >= 7) { slideIndex = 0; }
+      if (slideIndex >= 14) { slideIndex = 0; }
       gallerySlides.style.transform = `translateX(-${slideIndex * 100}%)`;
       setTimeout(slideGallery, 3000); // 3 seconds delay
     }
@@ -294,6 +344,13 @@
 
       alert("Thank you for your feedback!");
       document.getElementById("feedback-text").value = "";
+    }
+
+    // Show feedback tab content
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll(".tab-content");
+      tabs.forEach(tab => tab.classList.remove("active-tab"));
+      document.getElementById(tabId + "-section").classList.add("active-tab");
     }
   </script>
 </body>
