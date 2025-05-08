@@ -1,107 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Student Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Dashboard - Maa Saraswati Shikshayatan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
       margin: 0;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #4ca1af);
+      color: white;
     }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 40px 20px;
-    }
-
     header {
+      background: #34495e;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 40px;
+      font-size: 24px;
+      font-weight: bold;
     }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .dashboard {
+      padding: 30px;
+      text-align: center;
     }
-
     .card {
       background: rgba(255, 255, 255, 0.1);
+      margin: 20px auto;
       padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      max-width: 500px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: 0.3s ease;
     }
-
-    .card h2 {
-      margin-top: 0;
-      color: #ffd700;
+    .card:hover {
+      transform: scale(1.02);
     }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 5px;
-    }
-
     .logout {
-      display: block;
-      margin: 30px auto 0;
+      margin-top: 30px;
       padding: 10px 20px;
-      background: #ff5252;
+      background: #e74c3c;
+      color: white;
       border: none;
-      color: #fff;
       font-weight: bold;
       border-radius: 5px;
       cursor: pointer;
     }
-
-    .logout:hover {
-      background: #ff1744;
+    textarea {
+      width: 90%;
+      resize: none;
+      min-height: 100px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #f1c40f;
+      cursor: pointer;
+    }
+    .student-list {
+      text-align: left;
+      margin-top: 10px;
+    }
+    .student-list h4 {
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      padding: 10px;
+      margin: 0;
+      border-radius: 5px;
+    }
+    .student-list ul {
+      display: none;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      list-style: none;
+    }
+    .student-list ul li {
+      padding: 5px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <h1>Welcome, <span id="student-name">Student</span></h1>
-    <p>Your personalized dashboard</p>
-  </header>
+<header id="dashboard-title">Loading...</header>
 
-  <div class="card">
-    <h2>Your Results</h2>
-    <ul id="result-list">
-      <li>Loading results...</li>
-    </ul>
-  </div>
+<div class="dashboard" id="dashboard-content"></div>
 
-  <div class="card">
-    <h2>Fee Status</h2>
-    <ul id="fee-status">
-      <li>Loading fees...</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Notices</h2>
-    <ul id="student-notices">
-      <li>Loading notices...</li>
-    </ul>
-  </div>
-
-  <button class="logout" onclick="logout()">Logout</button>
-</div>
+<button class="logout" onclick="logout()">Logout</button>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -112,49 +101,92 @@
 <script>
   firebase.auth().onAuthStateChanged(user => {
     if (!user) {
-      location.href = 'login.html';
+      location.href = "login.html";
     } else {
+      const email = user.email;
       const uid = user.uid;
+      const title = document.getElementById("dashboard-title");
+      const content = document.getElementById("dashboard-content");
 
-      // Get student name (optional)
-      firebase.database().ref(`students/${uid}/name`).once('value', snapshot => {
-        document.getElementById('student-name').textContent = snapshot.val() || "Student";
-      });
+      if (email === "rajnitirgalpokotha@gmail.com") {
+        title.textContent = "Welcome Admin";
+        content.innerHTML = `
+          <div class="card">Manage Results</div>
+          <div class="card">Manage Fees</div>
+          <div class="card">
+            <h3>Post a Notice</h3>
+            <textarea id="notice-text" placeholder="Write your notice..."></textarea>
+            <button onclick="postNotice()">Publish Notice</button>
+          </div>
+          <div class="card">
+            <h3>📘 View Students by Class</h3>
+            <div class="student-list" id="student-list">Loading student data...</div>
+          </div>
+        `;
 
-      // Load results
-      firebase.database().ref(`results/${uid}`).on('value', snapshot => {
-        const list = document.getElementById('result-list');
-        list.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) return list.innerHTML = '<li>No results found.</li>';
-        Object.entries(data).forEach(([subject, score]) => {
-          list.innerHTML += `<li><strong>${subject}</strong>: ${score}</li>`;
+        // Load students grouped by class
+        firebase.database().ref("students").once("value", snapshot => {
+          const data = snapshot.val();
+          const classMap = {};
+          for (const id in data) {
+            const s = data[id];
+            if (!classMap[s.class]) classMap[s.class] = [];
+            classMap[s.class].push(s);
+          }
+
+          const listDiv = document.getElementById("student-list");
+          listDiv.innerHTML = "";
+          for (const className in classMap) {
+            const h4 = document.createElement("h4");
+            h4.textContent = className;
+            const ul = document.createElement("ul");
+            classMap[className].forEach(s => {
+              ul.innerHTML += `<li><strong>${s.name}</strong> (Roll: ${s.roll}) - Father: ${s.father}, Phone: ${s.phone}</li>`;
+            });
+            h4.onclick = () => ul.style.display = (ul.style.display === "block" ? "none" : "block");
+            listDiv.appendChild(h4);
+            listDiv.appendChild(ul);
+          }
         });
-      });
 
-      // Load fees
-      firebase.database().ref(`fees/${uid}`).on('value', snapshot => {
-        const list = document.getElementById('fee-status');
-        list.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) return list.innerHTML = '<li>No fee data available.</li>';
-        Object.entries(data).forEach(([month, status]) => {
-          list.innerHTML += `<li><strong>${month}</strong>: ${status}</li>`;
+      } else {
+        // Student Dashboard
+        firebase.database().ref(`students/${uid}/name`).once('value', snapshot => {
+          title.textContent = `Welcome ${snapshot.val() || "Student"}`;
         });
-      });
 
-      // Load notices (common for all students)
-      firebase.database().ref("notices").on("value", snapshot => {
-        const list = document.getElementById('student-notices');
-        list.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) return list.innerHTML = '<li>No notices.</li>';
-        Object.values(data).reverse().forEach(n => {
-          list.innerHTML += `<li><strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}</li>`;
-        });
-      });
+        content.innerHTML = `
+          <div class="card">My Attendance</div>
+          <div class="card">Fee Status</div>
+          <div class="card">Announcements</div>
+          <div class="card">Contact School</div>
+        `;
+      }
     }
   });
+
+  function postNotice() {
+    const noticeText = document.getElementById("notice-text").value.trim();
+    if (noticeText === "") {
+      alert("Notice cannot be empty.");
+      return;
+    }
+
+    const notice = {
+      text: noticeText,
+      timestamp: Date.now()
+    };
+
+    firebase.database().ref("notices").push(notice)
+      .then(() => {
+        alert("Notice posted successfully!");
+        document.getElementById("notice-text").value = "";
+      })
+      .catch(err => {
+        alert("Failed to post notice.");
+        console.error(err);
+      });
+  }
 
   function logout() {
     firebase.auth().signOut().then(() => {
