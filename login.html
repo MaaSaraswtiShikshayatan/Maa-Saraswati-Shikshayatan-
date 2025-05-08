@@ -5,23 +5,26 @@
   <title>Login - Maa Saraswati Shikshayatan</title>
   <style>
     body {
-      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      background: url('https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      backdrop-filter: blur(5px);
     }
     .container {
-      background: white;
+      background: rgba(255, 255, 255, 0.2);
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
       width: 350px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
     h2 {
-      color: #333;
+      color: #fff;
     }
     input {
       width: 100%;
@@ -41,7 +44,7 @@
     }
     .toggle {
       margin-top: 10px;
-      color: #2e86de;
+      color: #fff;
       cursor: pointer;
     }
   </style>
@@ -78,7 +81,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
@@ -155,8 +157,6 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-
-          // Admin Email Check
           if (user.email === "rajnitirgalpokotha@gmail.com") {
             window.location.href = "dashboard.html";
           } else {
