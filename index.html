@@ -35,7 +35,6 @@
       color: white;
     }
 
-    /* Responsive nav for mobile */
     @media (max-width: 600px) {
       nav {
         display: flex;
@@ -78,7 +77,6 @@
       font-size: 12px;
     }
 
-    /* Gallery Styling */
     .gallery-container {
       position: relative;
       max-width: 900px;
@@ -171,7 +169,24 @@
         <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image 4"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image 5"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image 6"></div>
+        <!-- New images added -->
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image 7"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image 8"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image 9"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image 10"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image 11"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image 12"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image 13"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="section" id="feedback">
+    <h2>Student Feedback</h2>
+    <div class="profile-box">
+      <textarea id="feedbackMessage" rows="4" placeholder="Write your feedback here..."></textarea><br>
+      <button onclick="submitFeedback()">Submit Feedback</button>
+      <p id="feedbackResponse"></p>
     </div>
   </section>
 
@@ -181,7 +196,6 @@
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
@@ -197,6 +211,24 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // Function to submit feedback
+    function submitFeedback() {
+      const feedback = document.getElementById("feedbackMessage").value.trim();
+      if (feedback.toLowerCase().includes("bad") || feedback.toLowerCase().includes("poor")) {
+        document.getElementById("feedbackResponse").innerText = "Your feedback was inappropriate and has been deleted.";
+        return;
+      }
+
+      db.ref("feedback").push({
+        message: feedback,
+        date: new Date().toLocaleString()
+      });
+
+      document.getElementById("feedbackResponse").innerText = "Thank you for your positive feedback!";
+      document.getElementById("feedbackMessage").value = "";
+    }
+
+    // Fetch and display notices from Firebase
     const noticeBox = document.getElementById("notice-list");
 
     db.ref("notices").limitToLast(10).once("value", snapshot => {
@@ -219,18 +251,19 @@
       noticeBox.innerHTML = html;
     });
 
-    // Gallery Slideshow (Side by Side)
+    // Gallery Slideshow
     let slideIndex = 0;
     const gallerySlides = document.querySelector('.gallery-slides');
 
     function slideGallery() {
       slideIndex++;
-      if (slideIndex >= 6) { slideIndex = 0; }
+      if (slideIndex >= 13) { slideIndex = 0; }
       gallerySlides.style.transform = `translateX(-${slideIndex * 100}%)`;
       setTimeout(slideGallery, 3000); // 3 seconds delay
     }
 
     slideGallery();
   </script>
+
 </body>
 </html>
