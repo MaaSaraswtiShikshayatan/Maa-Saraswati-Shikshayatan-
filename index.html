@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f6f7;
+      background: linear-gradient(135deg, #4ca1af, #2c3e50); /* Gradient Background */
     }
     header {
       background: #2c3e50;
@@ -34,6 +34,12 @@
       border-radius: 6px;
       color: white;
     }
+    nav a.feedback-tab {
+      background: #e67e22;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: white;
+    }
 
     /* Responsive nav for mobile */
     @media (max-width: 600px) {
@@ -52,13 +58,18 @@
       padding: 40px 20px;
       max-width: 900px;
       margin: auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
+
     .hero {
       background: linear-gradient(135deg, #4ca1af, #2c3e50);
       color: white;
       padding: 60px 20px;
       text-align: center;
     }
+
     .notice-box, .profile-box {
       background: #ffffff;
       border-radius: 10px;
@@ -66,6 +77,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
       margin-top: 20px;
     }
+
     .notice {
       border-bottom: 1px solid #ccc;
       padding: 10px 0;
@@ -78,66 +90,71 @@
       font-size: 12px;
     }
 
-    /* Feedback Section Styling */
+    /* Gallery Styling */
+    .gallery-container {
+      position: relative;
+      max-width: 900px;
+      margin: 40px auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .gallery-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .gallery-slide {
+      min-width: 100%;
+      transition: transform 0.5s ease;
+    }
+    .gallery-slide img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* Feedback Form Styling */
     .feedback-container {
       background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       border-radius: 8px;
       margin-top: 40px;
       text-align: center;
+      transition: transform 0.3s ease;
     }
+
     .feedback-container h3 {
       margin-bottom: 20px;
       color: #2c3e50;
     }
+
     .feedback-container textarea {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
       resize: vertical;
+      font-size: 16px;
     }
+
     .feedback-container button {
       background-color: #e67e22;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
     }
+
     .feedback-container button:hover {
       background-color: #d35400;
-    }
-
-    .feedback-list {
-      margin-top: 20px;
-    }
-
-    .feedback-item {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .feedback-item p {
-      margin: 0;
-      font-size: 14px;
-    }
-    .feedback-item .delete-btn {
-      background-color: #e74c3c;
-      color: white;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      margin-top: 10px;
-    }
-    .feedback-item .delete-btn:hover {
-      background-color: #c0392b;
     }
 
     footer {
@@ -146,6 +163,21 @@
       text-align: center;
       padding: 20px;
       margin-top: 40px;
+    }
+
+    .feedback-display {
+      margin-top: 40px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .feedback-item {
+      margin-bottom: 20px;
+    }
+    .feedback-date {
+      font-size: 12px;
+      color: #888;
     }
   </style>
 </head>
@@ -162,7 +194,7 @@
     <a href="#admission">Admission</a>
     <a href="#notices">Notices</a>
     <a href="#gallery">Gallery</a>
-    <a href="#feedback">Feedback</a>
+    <a href="#feedback" class="feedback-tab">Feedback</a>
     <a href="#contact">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
@@ -223,8 +255,10 @@
       <button onclick="submitFeedback()">Submit Feedback</button>
     </div>
 
-    <div class="feedback-list" id="feedback-list">
-      <p>Loading feedback...</p>
+    <!-- Display Feedbacks -->
+    <div class="feedback-display">
+      <h3>Latest Feedback</h3>
+      <div id="feedback-list">Loading feedback...</div>
     </div>
   </section>
 
@@ -250,7 +284,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Get Notices
+    // Fetching notices from Firebase
     const noticeBox = document.getElementById("notice-list");
 
     db.ref("notices").limitToLast(10).once("value", snapshot => {
@@ -273,28 +307,20 @@
       noticeBox.innerHTML = html;
     });
 
-    // Get Feedbacks
-    const feedbackList = document.getElementById("feedback-list");
+    // Gallery Slideshow (Side by Side)
+    let slideIndex = 0;
+    const gallerySlides = document.querySelector('.gallery-slides');
 
-    db.ref("feedbacks").limitToLast(10).once("value", snapshot => {
-      const data = snapshot.val();
-      if (!data) {
-        feedbackList.innerHTML = "<p>No feedback available.</p>";
-        return;
-      }
+    function slideGallery() {
+      slideIndex++;
+      if (slideIndex >= 7) { slideIndex = 0; }
+      gallerySlides.style.transform = `translateX(-${slideIndex * 100}%)`;
+      setTimeout(slideGallery, 3000); // 3 seconds delay
+    }
 
-      const feedbacks = Object.values(data).reverse();
-      let feedbackHtml = "";
-      feedbacks.forEach((f, index) => {
-        feedbackHtml += `
-          <div class="feedback-item" id="feedback-${index}">
-            <p>${f.feedback}</p>
-            <button class="delete-btn" onclick="deleteFeedback('${index}')">Delete</button>
-          </div>`;
-      });
-      feedbackList.innerHTML = feedbackHtml;
-    });
+    slideGallery();
 
+    // Feedback Submission
     function submitFeedback() {
       const feedbackText = document.getElementById("feedback-text").value;
 
@@ -312,14 +338,28 @@
       document.getElementById("feedback-text").value = "";
     }
 
-    function deleteFeedback(id) {
-      db.ref("feedbacks").child(id).remove().then(() => {
-        alert("Feedback deleted successfully");
-        window.location.reload();
-      }).catch(error => {
-        alert("Error deleting feedback: " + error);
+    // Display Feedbacks
+    const feedbackList = document.getElementById('feedback-list');
+
+    db.ref("feedbacks").limitToLast(5).once("value", snapshot => {
+      const data = snapshot.val();
+      if (!data) {
+        feedbackList.innerHTML = "<p>No feedback available.</p>";
+        return;
+      }
+
+      const feedbacks = Object.values(data).reverse();
+      let html = "";
+      feedbacks.forEach(f => {
+        const date = new Date(f.timestamp).toLocaleString();
+        html += `
+          <div class="feedback-item">
+            <p>${f.feedback}</p>
+            <div class="feedback-date">${date}</div>
+          </div>`;
       });
-    }
+      feedbackList.innerHTML = html;
+    });
   </script>
 </body>
 </html>
