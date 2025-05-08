@@ -63,6 +63,22 @@
       color: #888;
       font-size: 12px;
     }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .gallery-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
     footer {
       background: #2c3e50;
       color: white;
@@ -84,6 +100,7 @@
     <a href="#message">Head's Message</a>
     <a href="#admission">Admission</a>
     <a href="#notices">Notices</a>
+    <a href="#gallery">Gallery</a>
     <a href="#contact">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
@@ -118,6 +135,14 @@
     <h2>Latest Notices</h2>
     <div class="notice-box" id="notice-list">
       <p>Loading notices...</p>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <h2>Photo Gallery</h2>
+    <div class="gallery-grid">
+      <img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image 1">
+      <!-- চাইলে আরও ছবি নিচে যুক্ত করুন -->
     </div>
   </section>
 
