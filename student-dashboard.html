@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Dashboard - Maa Saraswati Shikshayatan</title>
   <style>
     body {
@@ -39,10 +39,10 @@
 <body>
   <header>Student Dashboard</header>
   <div class="dashboard">
-    <div class="card">My Attendance</div>
-    <div class="card">Fee Status</div>
-    <div class="card">Announcements</div>
-    <div class="card">Contact School</div>
+    <div class="card" id="attendance-card">My Attendance</div>
+    <div class="card" id="fee-card">Fee Status</div>
+    <div class="card" id="announcements-card">Announcements</div>
+    <div class="card" id="contact-card">Contact School</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -73,7 +73,10 @@
               break;
             }
           }
-          if (!uid) return;
+          if (!uid) {
+            document.getElementById('fee-card').innerText = "UID not found for your email.";
+            return;
+          }
 
           db.ref("fees/" + uid).once("value", snap => {
             const data = snap.val();
@@ -84,8 +87,7 @@
               html += `<li>${month}: ${status}</li>`;
             });
             html += "</ul>";
-            const feeCard = document.querySelectorAll('.card')[1];
-            feeCard.innerHTML = html;
+            document.getElementById('fee-card').innerHTML = html;
           });
         });
       } else {
