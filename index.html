@@ -4,178 +4,160 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maa Saraswati Shikshayatan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Spectral+SC:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(45deg, #ff4b5c, #4b8eff, #2bb0ff, #ff8c00);
-      background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite;
+      background: #f4f6f7;
+    }
+    header {
+      background: #2c3e50;
       color: white;
-      overflow-x: hidden;
-      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
     }
     nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: #34495e;
       padding: 10px;
-      z-index: 1000;
+      text-align: center;
     }
-    nav ul {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    nav ul li {
-      margin: 0 15px;
-    }
-    nav ul li a {
-      text-decoration: none;
+    nav a {
       color: white;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
     }
-    nav ul li a:hover {
-      color: #ffd700;
+    .section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: auto;
     }
-
     .hero {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: linear-gradient(135deg, #4ca1af, #2c3e50);
+      color: white;
+      padding: 60px 20px;
       text-align: center;
-      flex-direction: column;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 20px;
     }
-    .hero h1 {
-      font-family: 'Spectral SC', serif;
-      font-size: 4rem;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-    }
-    .hero p {
-      font-size: 1.5rem;
-      margin-bottom: 40px;
-      letter-spacing: 1px;
-    }
-
-    .btn {
-      padding: 15px 30px;
-      background-color: #ffd700;
-      border: none;
-      color: black;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: 0.3s ease;
-      border-radius: 5px;
-    }
-    .btn:hover {
-      background-color: #ffcc00;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .notice-box {
-      max-width: 700px;
-      margin: 50px auto;
-      background: #fff;
-      color: black;
-      padding: 20px;
+    .notice-box, .profile-box {
+      background: #ffffff;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-top: 20px;
     }
-    .notice-box h2 {
+    .notice {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .notice:last-child {
+      border-bottom: none;
+    }
+    .notice-date {
+      color: #888;
+      font-size: 12px;
+    }
+    footer {
+      background: #2c3e50;
+      color: white;
       text-align: center;
-      color: #2e86de;
-    }
-    .notice-box ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    .notice-box ul li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+      padding: 20px;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
+  <header>
+    <h1>Maa Saraswati Shikshayatan</h1>
+    <p>A Trusted Coaching Center for Academic Excellence</p>
+  </header>
+
   <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="admission.html">Admissions</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="login.html">Login</a></li>
-    </ul>
+    <a href="#hero">Home</a>
+    <a href="#message">Head's Message</a>
+    <a href="#admission">Admission</a>
+    <a href="#notices">Notices</a>
+    <a href="#contact">Contact</a>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Welcome to Maa Saraswati Shikshayatan</h1>
-    <p>Your journey to knowledge begins here. Enlightening young minds with wisdom and dedication.</p>
-    <a href="admission.html"><button class="btn">Apply for Admission</button></a>
+  <section class="hero" id="hero">
+    <h2>Welcome to Maa Saraswati Shikshayatan</h2>
+    <p>We nurture students to unlock their full potential through discipline, dedication, and quality teaching.</p>
   </section>
 
-  <!-- Notice Section -->
-  <div class="notice-box">
-    <h2>📢 Latest Notices</h2>
-    <ul id="notice-list">
-      <li>Loading latest notices...</li>
-    </ul>
-  </div>
+  <section class="section" id="message">
+    <h2>Message from the Head</h2>
+    <div class="profile-box">
+      <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has been guiding students with utmost dedication and integrity. Under his leadership, the coaching center has grown into a hub of excellence where learning is valued and success is achieved.</p>
+      <p>“Education is not just about passing exams, it's about shaping character and confidence.” – <em>Anup Sarkar</em></p>
+    </div>
+  </section>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Maa Saraswati Shikshayatan | Designed by Anup Sarkar</p>
+  <section class="section" id="admission">
+    <h2>Admission</h2>
+    <div class="profile-box">
+      <p>Admission is open for academic year 2025. Students from Class V to XII are welcome to apply. We offer specialized coaching in all major subjects including Mathematics, Science, and English.</p>
+      <p><strong>How to Apply:</strong></p>
+      <ul>
+        <li>Visit our coaching center with previous academic records.</li>
+        <li>Complete the admission form provided at the office.</li>
+        <li>Contact: +91-XXXXXXXXXX | Email: info@mscoaching.in</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="notices">
+    <h2>Latest Notices</h2>
+    <div class="notice-box" id="notice-list">
+      <p>Loading notices...</p>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <p><strong>Address:</strong> Near Town Hall, ABC Road, XYZ District</p>
+    <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
+    <p><strong>Email:</strong> info@mscoaching.in</p>
+    <p>&copy; 2025 Maa Saraswati Shikshayatan. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase Scripts -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="firebase-config.js"></script>
-
   <script>
-    const noticeList = document.getElementById("notice-list");
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    firebase.database().ref("notices").on("value", (snapshot) => {
-      noticeList.innerHTML = "";
+    const noticeBox = document.getElementById("notice-list");
+
+    db.ref("notices").limitToLast(10).once("value", snapshot => {
       const data = snapshot.val();
       if (!data) {
-        noticeList.innerHTML = "<li>No notices available.</li>";
+        noticeBox.innerHTML = "<p>No notices available.</p>";
         return;
       }
-      Object.values(data).reverse().forEach(n => {
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>${new Date(n.timestamp).toLocaleDateString()}</strong>: ${n.text}`;
-        noticeList.appendChild(li);
+
+      const notices = Object.values(data).reverse();
+      let html = "";
+      notices.forEach(n => {
+        const date = new Date(n.date).toLocaleString();
+        html += `
+          <div class="notice">
+            <div>${n.message}</div>
+            <div class="notice-date">${date}</div>
+          </div>`;
       });
+      noticeBox.innerHTML = html;
     });
   </script>
-
 </body>
 </html>
