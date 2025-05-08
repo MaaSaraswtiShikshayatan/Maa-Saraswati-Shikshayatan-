@@ -2,101 +2,160 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Dashboard</title>
+  <title>Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      background: linear-gradient(135deg, #2b5876, #4e4376);
       color: white;
-      text-align: center;
-      padding-bottom: 50px;
-    }
-    h1 { margin-top: 40px; }
-    .section {
-      background: rgba(255,255,255,0.1);
-      margin: 20px auto;
       padding: 20px;
-      width: 90%;
-      max-width: 600px;
-      border-radius: 10px;
     }
-    h2 { color: #ffd700; }
-    .logout {
-      margin: 30px auto;
-      padding: 10px 20px;
-      background-color: #ff5252;
-      border: none;
-      color: white;
+    h1 { text-align: center; }
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      max-width: 600px;
+    }
+    label, select, input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 8px;
       border-radius: 5px;
+    }
+    button {
+      background-color: #ffd700;
+      color: black;
+      border: none;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #e6c200;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome, Admin</h1>
-  <p>Admin Dashboard</p>
 
-  <div class="section">
-    <h2>All Students</h2>
-    <div id="student-list">Loading students...</div>
+  <h1>Admin Dashboard</h1>
+
+  <div class="box">
+    <label for="student-select">Select Student by UID</label>
+    <select id="student-select"><option>Loading...</option></select>
+
+    <div id="student-info"></div>
   </div>
 
-  <div class="section">
-    <h2>Fee Records</h2>
-    <div id="fee-list">Loading fees...</div>
+  <div class="box" id="attendance-section" style="display:none;">
+    <h3>Update Attendance</h3>
+    <label>Month</label>
+    <input type="text" id="att-month" placeholder="e.g., May">
+    <label>Status</label>
+    <select id="att-status">
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+    </select>
+    <button onclick="updateAttendance()">Save Attendance</button>
   </div>
 
-  <div class="section">
-    <h2>Notices</h2>
-    <div id="notice-list">Loading notices...</div>
+  <div class="box" id="fee-section" style="display:none;">
+    <h3>Update Fee</h3>
+    <label>Month</label>
+    <input type="text" id="fee-month" placeholder="e.g., May">
+    <label>Status</label>
+    <select id="fee-status">
+      <option value="Paid">Paid</option>
+      <option value="Unpaid">Unpaid</option>
+    </select>
+    <button onclick="updateFee()">Save Fee</button>
   </div>
 
-  <button class="logout" onclick="logout()">Logout</button>
+  <div class="box" id="result-section" style="display:none;">
+    <h3>Update Result</h3>
+    <label>Subject</label>
+    <input type="text" id="res-subject" placeholder="e.g., Math">
+    <label>Marks</label>
+    <input type="number" id="res-score">
+    <button onclick="updateResult()">Save Result</button>
+  </div>
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="firebase-config.js"></script>
+
   <script>
+    const db = firebase.database();
+    const uidSelect = document.getElementById('student-select');
+    const studentInfoDiv = document.getElementById('student-info');
+
     firebase.auth().onAuthStateChanged(user => {
-      if (!user) return location.href = "login.html";
+      if (!user || user.email !== "rajnitirgalpokotha@gmail.com") {
+        location.href = "login.html";
+      } else {
+        loadStudents();
+      }
+    });
 
-      firebase.database().ref('students').once('value', snap => {
-        const el = document.getElementById('student-list');
-        el.innerHTML = '';
+    function loadStudents() {
+      db.ref('students').once('value', snap => {
         const data = snap.val();
-        if (!data) return el.innerHTML = '<div>No students</div>';
-        Object.entries(data).forEach(([uid, d]) => {
-          el.innerHTML += `<div><strong>${uid}</strong>: ${d.name} (${d.email})</div>`;
-        });
+        uidSelect.innerHTML = '<option value="">-- Select UID --</option>';
+        for (const uid in data) {
+          const option = document.createElement('option');
+          option.value = uid;
+          option.textContent = `${uid} - ${data[uid].name}`;
+          uidSelect.appendChild(option);
+        }
       });
+    }
 
-      firebase.database().ref('fees').once('value', snap => {
-        const el = document.getElementById('fee-list');
-        el.innerHTML = '';
-        const data = snap.val();
-        if (!data) return el.innerHTML = '<div>No fees</div>';
-        Object.entries(data).forEach(([uid, fees]) => {
-          el.innerHTML += `<div><strong>${uid}</strong>: ${Object.entries(fees).map(([m,s]) => m+':'+s).join(', ')}</div>`;
-        });
-      });
+    uidSelect.addEventListener('change', () => {
+      const uid = uidSelect.value;
+      if (!uid) return;
 
-      firebase.database().ref('notices').once('value', snap => {
-        const el = document.getElementById('notice-list');
-        el.innerHTML = '';
-        const data = snap.val();
-        if (!data) return el.innerHTML = '<div>No notices</div>';
-        Object.values(data).reverse().forEach(n => {
-          const date = new Date(n.timestamp).toLocaleDateString();
-          el.innerHTML += `<div><strong>${date}</strong>: ${n.text}</div>`;
-        });
+      // Show data sections
+      document.getElementById('attendance-section').style.display = 'block';
+      document.getElementById('fee-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'block';
+
+      db.ref('students/' + uid).once('value', snap => {
+        const stu = snap.val();
+        studentInfoDiv.innerHTML = `
+          <p><strong>Name:</strong> ${stu.name}</p>
+          <p><strong>Email:</strong> ${stu.email}</p>
+          <p><strong>UID:</strong> ${uid}</p>
+        `;
       });
     });
 
-    function logout() {
-      firebase.auth().signOut().then(() => location.href = "login.html");
+    function updateAttendance() {
+      const uid = uidSelect.value;
+      const month = document.getElementById('att-month').value;
+      const status = document.getElementById('att-status').value;
+      db.ref(`attendance/${uid}/${month}`).set(status);
+      alert("Attendance updated.");
+    }
+
+    function updateFee() {
+      const uid = uidSelect.value;
+      const month = document.getElementById('fee-month').value;
+      const status = document.getElementById('fee-status').value;
+      db.ref(`fees/${uid}/${month}`).set(status);
+      alert("Fee updated.");
+    }
+
+    function updateResult() {
+      const uid = uidSelect.value;
+      const subject = document.getElementById('res-subject').value;
+      const score = document.getElementById('res-score').value;
+      db.ref(`results/${uid}/${subject}`).set(score);
+      alert("Result updated.");
     }
   </script>
+
 </body>
 </html>
