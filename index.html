@@ -4,102 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maa Saraswati Shikshayatan</title>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #4ca1af, #2c3e50);
-    }
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    nav {
-      background: #34495e;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a.login-button,
-    nav a.feedback-tab {
-      background: #e67e22;
-      padding: 6px 12px;
-      border-radius: 6px;
-      color: white;
-    }
-    @media (max-width: 600px) {
-      nav {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-    .section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: auto;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      margin-top: 40px;
-    }
-    .hero {
-      background: linear-gradient(135deg, #4ca1af, #2c3e50);
-      color: white;
-      padding: 60px 20px;
-      text-align: center;
-    }
-    .notice-box, .profile-box {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      margin-top: 20px;
-    }
-    .notice {
-      border-bottom: 1px solid #ccc;
-      padding: 10px 0;
-    }
-    .notice:last-child { border-bottom: none; }
-    .notice-date { color: #888; font-size: 12px; }
-    /* Gallery Styles */
-    .gallery-container {
-      position: relative;
-      max-width: 900px;
-      margin: 40px auto;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
-    .gallery-slides {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-    .gallery-slide {
-      min-width: 100%;
-    }
-    .gallery-slide img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-    }
-    @media (max-width: 600px) {
-      .gallery-slide img { height: 200px; }
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background: linear-gradient(135deg, #4ca1af, #2c3e50); }
+    header, footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
+    nav { background: #34495e; padding: 10px; text-align: center; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    nav a.login-button, nav a.feedback-tab { background: #e67e22; padding: 6px 12px; border-radius: 6px; }
+    @media (max-width:600px) { nav { display:flex; flex-direction:column; align-items:center;} nav a { margin:10px 0; }}
+    .section { padding:40px 20px; max-width:900px; margin:40px auto; background:white; box-shadow:0 0 10px rgba(0,0,0,0.1); border-radius:8px; }
+    .hero { background: linear-gradient(135deg, #4ca1af, #2c3e50); color:white; padding:60px 20px; text-align:center; }
+    .profile-box, .notice-box { background:#fff; border-radius:10px; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.2); margin-top:20px; }
+    .notice { border-bottom:1px solid #ccc; padding:10px 0; }
+    .notice:last-child { border-bottom:none; }
+    .notice-date { color:#888; font-size:12px; }
+    .gallery-container { position:relative; max-width:900px; margin:40px auto; overflow:hidden; }
+    .gallery-slides { display:flex; transition:transform 0.5s ease-in-out; }
+    .gallery-slide { min-width:100%; }
+    .gallery-slide img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
+    @media (max-width:600px) { .gallery-slide img{height:200px;} }
   </style>
 </head>
 <body>
@@ -107,6 +32,7 @@
     <h1>Maa Saraswati Shikshayatan</h1>
     <p>A Trusted Coaching Center for Academic Excellence</p>
   </header>
+
   <nav>
     <a href="#hero">Home</a>
     <a href="#message">Head's Message</a>
@@ -139,7 +65,9 @@
 
   <section class="section" id="notices">
     <h2>Latest Notices</h2>
-    <div class="notice-box" id="notice-list"><p>Loading notices...</p></div>
+    <div class="notice-box" id="notice-list">
+      <p>Loading notices...</p>
+    </div>
   </section>
 
   <section class="section" id="gallery">
@@ -164,20 +92,51 @@
     </div>
   </section>
 
-  <!-- Feedback and Footer -->
   <footer>
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.</p>
   </footer>
 
   <script>
-    let currentIndex = 0;
+    // Firebase configuration copied from dashboard (2).html
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Load notices from Firebase
+    const noticeList = document.getElementById('notice-list');
+    noticeList.innerHTML = '';
+    db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
+      noticeList.innerHTML = '';
+      if (!snapshot.exists()) {
+        noticeList.innerHTML = '<p>No notices published yet.</p>';
+        return;
+      }
+      snapshot.forEach(child => {
+        const notice = child.val();
+        const div = document.createElement('div');
+        div.classList.add('notice');
+        const date = new Date(notice.timestamp);
+        div.innerHTML = `<p>${notice.text}</p><div class="notice-date">${date.toLocaleDateString('en-GB')}</div>`;
+        noticeList.prepend(div);
+      });
+    });
+
+    // Gallery Auto-slide
+    let idx = 0;
     const slides = document.querySelectorAll('.gallery-slide');
-    const totalSlides = slides.length;
-    function showNextSlide() {
-      currentIndex = (currentIndex + 1) % totalSlides;
-      document.querySelector('.gallery-slides').style.transform = `translateX(-${currentIndex * 100}%)`;
+    function slideShow() {
+      idx = (idx + 1) % slides.length;
+      document.querySelector('.gallery-slides').style.transform = `translateX(-${idx * 100}%)`;
     }
-    setInterval(showNextSlide, 3000);
+    setInterval(slideShow, 3000);
   </script>
 </body>
 </html>
