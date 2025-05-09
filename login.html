@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body {
       margin: 0;
       padding: 0;
@@ -61,11 +58,8 @@
       background: rgba(255,255,255,0.15);
       color: white;
       font-size: 15px;
-      transition: 0.3s;
     }
-    input::placeholder {
-      color: #ddd;
-    }
+    input::placeholder { color: #ddd; }
     input:focus {
       background: rgba(255,255,255,0.25);
       outline: none;
@@ -76,13 +70,10 @@
       margin-top: 10px;
       border: none;
       border-radius: 10px;
-      background: #00c6ff;
       background: linear-gradient(to right, #0072ff, #00c6ff);
       color: white;
       font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
     }
     button:hover {
       background: linear-gradient(to right, #005be0, #00aaff);
@@ -175,9 +166,7 @@
         const serial = result.snapshot.val().toString().padStart(2, '0');
         const uid = firstChar + serial;
 
-        const studentData = {
-          name, dob, phone, email, address, uid, password
-        };
+        const studentData = { name, dob, phone, email, address, uid, password };
 
         auth.createUserWithEmailAndPassword(email, password)
           .then(() => db.ref('students/' + uid).set(studentData))
@@ -206,13 +195,11 @@
           snapshot.forEach(child => {
             const student = child.val();
             const match = (student.phone === identifier || student.email.toLowerCase() === identifier);
-            if (match && student.password === password) {
-              matchedStudent = student;
-            }
+            if (match) matchedStudent = student;
           });
 
           if (!matchedStudent) {
-            alert("Invalid phone/email or password.");
+            alert("No user found with that phone/email.");
             return;
           }
 
