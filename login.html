@@ -97,7 +97,7 @@
     <h2 id="form-title">Login</h2>
 
     <div id="login-form">
-      <input type="text" id="login-identifier" placeholder="Phone or Email" />
+      <input type="email" id="login-identifier" placeholder="Email Address" />
       <input type="password" id="login-password" placeholder="Password" />
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
@@ -181,43 +181,25 @@
     }
 
     function login() {
-      const identifier = document.getElementById("login-identifier").value.trim().toLowerCase();
+      const email = document.getElementById("login-identifier").value.trim().toLowerCase();
       const password = document.getElementById("login-password").value;
 
-      if (!identifier || !password) {
-        alert("Please enter phone/email and password.");
+      if (!email || !password) {
+        alert("Please enter email and password.");
         return;
       }
 
-      db.ref('students').once('value')
-        .then(snapshot => {
-          let matchedStudent = null;
-          snapshot.forEach(child => {
-            const student = child.val();
-            const match = (student.phone === identifier || student.email.toLowerCase() === identifier);
-            if (match) matchedStudent = student;
-          });
-
-          if (!matchedStudent) {
-            alert("No user found with that phone/email.");
-            return;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("Login successful!");
+          if (email === "rajnitirgalpokotha@gmail.com") {
+            window.location.href = "dashboard.html";
+          } else {
+            window.location.href = "student-dashboard.html";
           }
-
-          auth.signInWithEmailAndPassword(matchedStudent.email, password)
-            .then(() => {
-              alert("Login successful!");
-              if (matchedStudent.email === "rajnitirgalpokotha@gmail.com") {
-                window.location.href = "dashboard.html";
-              } else {
-                window.location.href = "student-dashboard.html";
-              }
-            })
-            .catch(error => {
-              alert("Authentication failed: " + error.message);
-            });
         })
         .catch(error => {
-          alert("Login error: " + error.message);
+          alert("Login failed: " + error.message);
         });
     }
   </script>
