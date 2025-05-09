@@ -30,6 +30,7 @@
       max-width: 400px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       transition: transform 0.3s;
+      cursor: pointer;
     }
     .card:hover {
       transform: scale(1.05);
@@ -42,9 +43,11 @@
     <div class="card" id="attendance-card">My Attendance</div>
     <div class="card" id="fee-card">Fee Status</div>
     <div class="card" id="announcements-card">Announcements</div>
-    <div class="card" id="contact-card">Contact School</div>
+    <div class="card" id="contact-card" onclick="window.open('index (4).html#contact', '_blank')">Contact Administration</div>
+    <div class="card" id="payment-card">Pay Online via PhonePe / GPay: 9851123356</div>
   </div>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -90,6 +93,24 @@
             document.getElementById('fee-card').innerHTML = html;
           });
         });
+
+        // Fetch announcements from Firebase
+        db.ref("notices").limitToLast(5).once("value", snapshot => {
+          const data = snapshot.val();
+          if (!data) {
+            document.getElementById("announcements-card").innerHTML = "<h3>Announcements</h3><p>No announcements available.</p>";
+            return;
+          }
+          const notices = Object.values(data).reverse();
+          let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
+          notices.forEach(n => {
+            const date = new Date(n.date).toLocaleString();
+            html += `<li><strong>${date}</strong>: ${n.message}</li>`;
+          });
+          html += "</ul>";
+          document.getElementById("announcements-card").innerHTML = html;
+        });
+
       } else {
         window.location.href = "login.html";
       }
