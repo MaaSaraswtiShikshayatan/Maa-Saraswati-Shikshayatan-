@@ -55,7 +55,7 @@
 
     <!-- Login Form -->
     <div id="login-form">
-      <input type="text" id="login-phone" placeholder="Phone Number" required />
+      <input type="text" id="login-identifier" placeholder="Phone or Email" required />
       <input type="password" id="login-password" placeholder="Password" required />
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
@@ -142,11 +142,11 @@
     }
 
     function login() {
-      const phone = document.getElementById("login-phone").value.trim();
+      const identifier = document.getElementById("login-identifier").value.trim().toLowerCase();
       const password = document.getElementById("login-password").value;
 
-      if (!phone || !password) {
-        alert("Please enter both phone and password.");
+      if (!identifier || !password) {
+        alert("Please enter identifier and password.");
         return;
       }
 
@@ -155,14 +155,16 @@
           let found = false;
           snapshot.forEach(child => {
             const student = child.val();
-            if (student.phone === phone && student.password === password) {
+            const match = (student.phone && student.phone === identifier) ||
+                          (student.email && student.email.toLowerCase() === identifier);
+            if (match && student.password === password) {
               found = true;
               alert("Login successful!");
               window.location.href = "student-dashboard.html";
             }
           });
           if (!found) {
-            alert("Invalid phone number or password.");
+            alert("Invalid phone/email or password.");
           }
         })
         .catch(error => {
