@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard - Maa Saraswati Shikshayatan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #4ca1af);
+      color: white;
+    }
+    header {
+      background: #34495e;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .dashboard {
+      padding: 40px;
+      text-align: center;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      margin: 20px auto;
+      padding: 25px 30px;
+      border-radius: 12px;
+      max-width: 400px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 18px;
+      flex-direction: column;
+    }
+    .card i {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    a.card-link {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    .logout-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .logout-container button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .logout-container button:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <header>Student Dashboard</header>
+  <div class="dashboard">
+    <div class="card" id="attendance-card">
+      <i class="fas fa-calendar-check"></i>
+      My Attendance
+    </div>
+    <div class="card" id="fee-card">
+      <i class="fas fa-wallet"></i>
+      Fee Status
+    </div>
+    <div class="card" id="announcements-card">
+      <i class="fas fa-bullhorn"></i>
+      Announcements
+    </div>
+    <div class="card" id="result-card">
+      <i class="fas fa-file-alt"></i>
+      Result
+    </div>
+    <a href="index.html#contact" target="_blank" class="card-link">
+      <div class="card">
+        <i class="fas fa-envelope"></i>
+        Contact Administration
+      </div>
+    </a>
+    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" class="card-link">
+      <div class="card">
+        <i class="fas fa-money-check-alt"></i>
+        Pay via PhonePe / GPay
+      </div>
+    </a>
+  </div>
+
+  <div class="logout-container">
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref("students").once("value").then(snapshot => {
+          const students = snapshot.val();
+          let uid = null;
+          for (let id in students) {
+            if (students[id].email === user.email) {
+              uid = id;
+              break;
+            }
+          }
+          if (!uid) {
+            document.getElementById('fee-card').innerText = "UID not found for your email.";
+            return;
+          }
+
+          // Fee Status
+          db.ref("fees/" + uid).once("value", snap => {
+            const data = snap.val();
+            const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            let html = "<h3>Fee Status</h3><ul style='list-style:none;padding:0'>";
+            months.forEach(month => {
+              const status = data && data[month] ? data[month] : "Unpaid";
+              html += `<li>${month}: ${status}</li>`;
+            });
+            html += "</ul>";
+            document.getElementById('fee-card').innerHTML = '<i class="fas fa-wallet"></i>' + html;
+          });
+
+          // Announcements
+          db.ref("notices").limitToLast(5).once("value", snapshot => {
+            const data = snapshot.val();
+            if (!data) {
+              document.getElementById("announcements-card").innerHTML = "<i class='fas fa-bullhorn'></i><h3>Announcements</h3><p>No announcements available.</p>";
+              return;
+            }
+            const notices = Object.values(data).reverse();
+            let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
+            notices.forEach(n => {
+              const date = new Date(n.date).toLocaleString();
+              html += `<li><strong>${date}</strong>: ${n.message}</li>`;
+            });
+            html += "</ul>";
+            document.getElementById("announcements-card").innerHTML = '<i class="fas fa-bullhorn"></i>' + html;
+          });
+
+          // Result
+          db.ref("results/" + uid).once("value", snap => {
+            const resultData = snap.val();
+            let html = "<h3>Result</h3>";
+            if (resultData && resultData.result) {
+              html += `<p>${resultData.result}</p>`;
+            } else {
+              html += "<p>No result available.</p>";
+            }
+            document.getElementById("result-card").innerHTML = '<i class="fas fa-file-alt"></i>' + html;
+          });
+
+        });
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Logout failed: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
