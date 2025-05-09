@@ -105,7 +105,6 @@
     </div>
     <h2 id="form-title">Login</h2>
 
-    <!-- Login Form -->
     <div id="login-form">
       <input type="text" id="login-identifier" placeholder="Phone or Email" />
       <input type="password" id="login-password" placeholder="Password" />
@@ -113,7 +112,6 @@
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
     </div>
 
-    <!-- Signup Form -->
     <div id="signup-form" style="display: none;">
       <input type="text" id="name" placeholder="Full Name" />
       <input type="text" id="dob" placeholder="Date of Birth" />
@@ -198,35 +196,41 @@
       const password = document.getElementById("login-password").value;
 
       if (!identifier || !password) {
-        alert("Please enter identifier and password.");
+        alert("Please enter phone/email and password.");
         return;
       }
 
       db.ref('students').once('value')
         .then(snapshot => {
-          let found = false;
+          let matchedStudent = null;
           snapshot.forEach(child => {
             const student = child.val();
             const match = (student.phone === identifier || student.email.toLowerCase() === identifier);
             if (match && student.password === password) {
-              found = true;
-              auth.signInWithEmailAndPassword(student.email, password)
-                .then(() => {
-                  alert("Login successful!");
-                  if (student.email === "rajnitirgalpokotha@gmail.com") {
-                    window.location.href = "dashboard.html";
-                  } else {
-                    window.location.href = "student-dashboard.html";
-                  }
-                })
-                .catch(err => {
-                  alert("Firebase Auth Error: " + err.message);
-                });
+              matchedStudent = student;
             }
           });
-          if (!found) {
+
+          if (!matchedStudent) {
             alert("Invalid phone/email or password.");
+            return;
           }
+
+          auth.signInWithEmailAndPassword(matchedStudent.email, password)
+            .then(() => {
+              alert("Login successful!");
+              if (matchedStudent.email === "rajnitirgalpokotha@gmail.com") {
+                window.location.href = "dashboard.html";
+              } else {
+                window.location.href = "student-dashboard.html";
+              }
+            })
+            .catch(error => {
+              alert("Authentication failed: " + error.message);
+            });
+        })
+        .catch(error => {
+          alert("Login error: " + error.message);
         });
     }
   </script>
