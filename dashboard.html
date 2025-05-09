@@ -1,3 +1,4 @@
+<!-- Updated dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,62 +6,30 @@
   <title>Admin Panel - Maa Saraswati Shikshayatan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #ecf0f1;
-      padding: 20px;
-      text-align: center;
-    }
+    body { font-family: Arial, sans-serif; background: #ecf0f1; padding: 20px; text-align: center; }
     .box {
-      background: white;
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 10px;
+      background: white; max-width: 600px; margin: 20px auto;
+      padding: 20px; border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     input, select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
+      width: 100%; padding: 10px; margin: 10px 0; font-size: 16px;
     }
-    h2 {
-      background: #34495e;
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-    th {
-      background: #333;
-      color: white;
-    }
-    .section-title {
-      margin-top: 40px;
-      font-size: 22px;
-      color: #2c3e50;
-    }
+    h2 { background: #34495e; color: white; padding: 15px; border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background: #333; color: white; }
+    .section-title { margin-top: 40px; font-size: 22px; color: #2c3e50; }
   </style>
 </head>
 <body>
-
   <h2>Admin Dashboard</h2>
 
-  <!-- Student Profile & Fee -->
+  <!-- Fee Management -->
   <div class="box">
     <h3>Search Student by UID</h3>
     <input type="text" id="uid" placeholder="Enter Student UID (e.g. R01)" />
     <button onclick="loadStudent()">Load Student Profile & Fees</button>
-
     <div id="student-profile"></div>
     <div id="report"></div>
 
@@ -79,30 +48,17 @@
     <button onclick="updateFee()">Save Fee</button>
   </div>
 
-  <!-- Result Upload -->
+  <!-- Receipt Approval -->
   <div class="box">
-    <h3 class="section-title">Upload Student Result</h3>
-    <input type="text" id="result-uid" placeholder="Enter UID" />
-    <textarea id="result-data" placeholder="Enter result details..."></textarea>
-    <button onclick="uploadResult()">Upload Result</button>
+    <h3 class="section-title">Pending Payment Receipts</h3>
+    <div id="receipt-list">Loading receipts...</div>
   </div>
 
-  <!-- Notice Post -->
-  <div class="box">
-    <h3 class="section-title">Post a Notice</h3>
-    <textarea id="notice" placeholder="Enter notice content..."></textarea>
-    <button onclick="postNotice()">Publish Notice</button>
-  </div>
-
-  <!-- Manage Notices -->
-  <div class="box">
-    <h3 class="section-title">Manage Notices</h3>
-    <div id="all-notices">Loading notices...</div>
-  </div>
-
-  <!-- Firebase -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
@@ -165,66 +121,48 @@
       });
     }
 
-    function postNotice() {
-      const notice = document.getElementById("notice").value.trim();
-      if (!notice) return alert("Enter a notice first.");
-      const timestamp = new Date().toISOString();
-      db.ref("notices").push({ message: notice, date: timestamp })
-        .then(() => {
-          alert("Notice posted!");
-          document.getElementById("notice").value = "";
-          loadAllNotices();
-        });
-    }
-
-    function uploadResult() {
-      const uid = document.getElementById("result-uid").value.trim();
-      const result = document.getElementById("result-data").value.trim();
-      if (!uid || !result) return alert("Fill both UID and result.");
-      db.ref("results/" + uid).set({ result: result })
-        .then(() => {
-          alert("Result uploaded!");
-          document.getElementById("result-data").value = "";
-        });
-    }
-
-    function loadAllNotices() {
-      const noticeDiv = document.getElementById("all-notices");
-      db.ref("notices").once("value").then(snapshot => {
+    function loadReceipts() {
+      const list = document.getElementById("receipt-list");
+      db.ref("receiptUploads").once("value").then(snapshot => {
         const data = snapshot.val();
         if (!data) {
-          noticeDiv.innerHTML = "<p>No notices available.</p>";
+          list.innerHTML = "<p>No receipts uploaded.</p>";
           return;
         }
 
         let html = "<ul style='list-style:none;padding:0'>";
-        for (let key in data) {
-          const n = data[key];
-          const date = new Date(n.date).toLocaleString();
-          html += `<li style="margin-bottom:10px;border-bottom:1px solid #ccc;padding:10px">
-            <div>${n.message}</div>
-            <div style="font-size:12px;color:#666">${date}</div>
-            <button style="margin-top:5px;background:#c0392b;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer"
-              onclick="deleteNotice('${key}')">Delete</button>
-          </li>`;
+        for (let uid in data) {
+          for (let month in data[uid]) {
+            const item = data[uid][month];
+            if (item.status !== "Pending") continue;
+            html += `<li style="margin-bottom:15px;border:1px solid #ccc;padding:10px;border-radius:8px">
+              <strong>UID:</strong> ${uid}<br>
+              <strong>Month:</strong> ${month}<br>
+              <img src="${item.url}" alt="Receipt" style="max-width:100%;height:auto;margin:10px 0;"><br>
+              <small>Uploaded: ${new Date(item.uploadedAt).toLocaleString()}</small><br>
+              <button onclick="approveReceipt('${uid}', '${month}')"
+                style="background:green;color:white;padding:6px 12px;border:none;border-radius:5px;cursor:pointer;margin-top:10px">
+                Approve & Mark Paid</button>
+            </li>`;
+          }
         }
         html += "</ul>";
-        noticeDiv.innerHTML = html;
+        list.innerHTML = html;
       });
     }
 
-    function deleteNotice(key) {
-      if (confirm("Are you sure you want to delete this notice?")) {
-        db.ref("notices/" + key).remove().then(() => {
-          alert("Notice deleted.");
-          loadAllNotices();
+    function approveReceipt(uid, month) {
+      db.ref(`fees/${uid}/${month}`).set("Paid").then(() => {
+        db.ref(`receiptUploads/${uid}/${month}/status`).set("Approved").then(() => {
+          alert(`Marked ${month} as Paid for ${uid}`);
+          loadReceipts();
         });
-      }
+      });
     }
 
     window.onload = function () {
-      loadAllNotices();
-    };
+      loadReceipts();
+    }
   </script>
 </body>
 </html>
