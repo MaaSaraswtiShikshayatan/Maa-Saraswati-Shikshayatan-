@@ -30,10 +30,14 @@
       max-width: 400px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       transition: transform 0.3s;
-      cursor: pointer;
     }
     .card:hover {
       transform: scale(1.05);
+    }
+    a.card-link {
+      color: white;
+      text-decoration: none;
+      display: block;
     }
   </style>
 </head>
@@ -43,8 +47,16 @@
     <div class="card" id="attendance-card">My Attendance</div>
     <div class="card" id="fee-card">Fee Status</div>
     <div class="card" id="announcements-card">Announcements</div>
-    <div class="card" id="contact-card" onclick="window.open('index (4).html#contact', '_blank')">Contact Administration</div>
-    <div class="card" id="payment-card">Pay Online via PhonePe / GPay: 9851123356</div>
+
+    <!-- Contact Link -->
+    <a href="index (4).html#contact" target="_blank" class="card-link">
+      <div class="card">Contact Administration</div>
+    </a>
+
+    <!-- UPI Payment Link -->
+    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" target="_blank" class="card-link">
+      <div class="card">Pay Online via PhonePe / GPay</div>
+    </a>
   </div>
 
   <!-- Firebase SDK -->
@@ -94,7 +106,7 @@
           });
         });
 
-        // Fetch announcements from Firebase
+        // Load announcements
         db.ref("notices").limitToLast(5).once("value", snapshot => {
           const data = snapshot.val();
           if (!data) {
