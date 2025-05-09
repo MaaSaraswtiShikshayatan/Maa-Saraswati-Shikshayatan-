@@ -36,9 +36,11 @@
       justify-content: center;
       gap: 12px;
       font-size: 18px;
+      flex-direction: column;
     }
     .card i {
       font-size: 22px;
+      margin-bottom: 8px;
     }
     .card:hover {
       transform: scale(1.05);
@@ -70,16 +72,33 @@
 <body>
   <header>Student Dashboard</header>
   <div class="dashboard">
-    <div class="card" id="attendance-card"><i class="fas fa-calendar-check"></i> My Attendance</div>
-    <div class="card" id="fee-card"><i class="fas fa-wallet"></i> Fee Status</div>
-    <div class="card" id="announcements-card"><i class="fas fa-bullhorn"></i> Announcements</div>
-
+    <div class="card" id="attendance-card">
+      <i class="fas fa-calendar-check"></i>
+      My Attendance
+    </div>
+    <div class="card" id="fee-card">
+      <i class="fas fa-wallet"></i>
+      Fee Status
+    </div>
+    <div class="card" id="announcements-card">
+      <i class="fas fa-bullhorn"></i>
+      Announcements
+    </div>
+    <div class="card" id="result-card">
+      <i class="fas fa-file-alt"></i>
+      Result
+    </div>
     <a href="index.html#contact" target="_blank" class="card-link">
-      <div class="card"><i class="fas fa-envelope"></i> Contact Administration</div>
+      <div class="card">
+        <i class="fas fa-envelope"></i>
+        Contact Administration
+      </div>
     </a>
-
     <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" class="card-link">
-      <div class="card"><i class="fas fa-money-check-alt"></i> Pay via PhonePe / GPay</div>
+      <div class="card">
+        <i class="fas fa-money-check-alt"></i>
+        Pay via PhonePe / GPay
+      </div>
     </a>
   </div>
 
@@ -121,6 +140,7 @@
             return;
           }
 
+          // Fee Status
           db.ref("fees/" + uid).once("value", snap => {
             const data = snap.val();
             const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -130,26 +150,39 @@
               html += `<li>${month}: ${status}</li>`;
             });
             html += "</ul>";
-            document.getElementById('fee-card').innerHTML = html;
+            document.getElementById('fee-card').innerHTML = '<i class="fas fa-wallet"></i>' + html;
           });
-        });
 
-        db.ref("notices").limitToLast(5).once("value", snapshot => {
-          const data = snapshot.val();
-          if (!data) {
-            document.getElementById("announcements-card").innerHTML = "<h3>Announcements</h3><p>No announcements available.</p>";
-            return;
-          }
-          const notices = Object.values(data).reverse();
-          let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
-          notices.forEach(n => {
-            const date = new Date(n.date).toLocaleString();
-            html += `<li><strong>${date}</strong>: ${n.message}</li>`;
+          // Announcements
+          db.ref("notices").limitToLast(5).once("value", snapshot => {
+            const data = snapshot.val();
+            if (!data) {
+              document.getElementById("announcements-card").innerHTML = "<i class='fas fa-bullhorn'></i><h3>Announcements</h3><p>No announcements available.</p>";
+              return;
+            }
+            const notices = Object.values(data).reverse();
+            let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
+            notices.forEach(n => {
+              const date = new Date(n.date).toLocaleString();
+              html += `<li><strong>${date}</strong>: ${n.message}</li>`;
+            });
+            html += "</ul>";
+            document.getElementById("announcements-card").innerHTML = '<i class="fas fa-bullhorn"></i>' + html;
           });
-          html += "</ul>";
-          document.getElementById("announcements-card").innerHTML = html;
-        });
 
+          // Result
+          db.ref("results/" + uid).once("value", snap => {
+            const resultData = snap.val();
+            let html = "<h3>Result</h3>";
+            if (resultData && resultData.result) {
+              html += `<p>${resultData.result}</p>`;
+            } else {
+              html += "<p>No result available.</p>";
+            }
+            document.getElementById("result-card").innerHTML = '<i class="fas fa-file-alt"></i>' + html;
+          });
+
+        });
       } else {
         window.location.href = "login.html";
       }
