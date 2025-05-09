@@ -22,7 +22,7 @@
     .notice-date { color:#888; font-size:12px; }
     /* Gallery Styles */
     .gallery-container { position:relative; max-width:900px; margin:40px auto; overflow:hidden; }
-    .gallery-slides { display:flex; width:100%; transition:transform 0.5s ease-in-out; }
+    .gallery-slides { display:flex; transition:transform 0.5s ease-in-out; }
     .gallery-slide { flex: 0 0 100%; }
     .gallery-slide img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
     @media (max-width:600px) { .gallery-slide img{height:200px;} }
@@ -33,6 +33,7 @@
     <h1>Maa Saraswati Shikshayatan</h1>
     <p>A Trusted Coaching Center for Academic Excellence</p>
   </header>
+
   <nav>
     <a href="#hero">Home</a>
     <a href="#message">Head's Message</a>
@@ -43,16 +44,19 @@
     <a href="#contact">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
+
   <section class="hero" id="hero">
     <h2>Welcome to Maa Saraswati Shikshayatan</h2>
     <p>We nurture students to unlock their full potential through discipline, dedication, and quality teaching.</p>
   </section>
+
   <section class="section" id="message">
     <h2>Message from the Head</h2>
     <div class="profile-box">
       <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has been guiding students with utmost dedication and integrity...</p>
     </div>
   </section>
+
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
@@ -66,24 +70,38 @@
       <p>Seats are limited, so early application is advised!</p>
     </div>
   </section>
+
   <section class="section" id="notices">
     <h2>Latest Notices</h2>
-    <div class="notice-box" id="notice-list">
-      <p>Loading notices...</p>
-    </div>
+    <div class="notice-box" id="notice-list"></div>
   </section>
+
   <section class="section" id="gallery">
     <h2>Photo Gallery</h2>
     <div class="gallery-container">
       <div class="gallery-slides">
         <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <!-- ... অন্যান্য স্লাইড ইমেজ ... -->
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
       </div>
     </div>
   </section>
+
   <footer>
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.</p>
   </footer>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Firebase configuration
@@ -101,7 +119,6 @@
 
       // Load notices
       const noticeList = document.getElementById('notice-list');
-      noticeList.innerHTML = '';
       db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
         noticeList.innerHTML = '';
         if (!snapshot.exists()) {
@@ -112,7 +129,7 @@
           const notice = child.val();
           const div = document.createElement('div');
           div.classList.add('notice');
-          div.innerHTML = `<p>${notice.text}</p><div class="notice-date">${new Date(notice.timestamp).toLocaleDateString('en-GB')}</div>`;
+          div.innerHTML = `<p>${notice.text || notice.message}</p><div class="notice-date">${new Date(notice.timestamp || notice.date).toLocaleDateString('en-GB')}</div>`;
           noticeList.prepend(div);
         });
       });
