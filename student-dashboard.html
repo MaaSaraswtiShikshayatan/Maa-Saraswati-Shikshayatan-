@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Dashboard - Maa Saraswati Shikshayatan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
       margin: 0;
@@ -25,11 +26,19 @@
     .card {
       background: rgba(255, 255, 255, 0.1);
       margin: 20px auto;
-      padding: 30px;
+      padding: 25px 30px;
       border-radius: 12px;
       max-width: 400px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 18px;
+    }
+    .card i {
+      font-size: 22px;
     }
     .card:hover {
       transform: scale(1.05);
@@ -39,24 +48,43 @@
       text-decoration: none;
       display: block;
     }
+    .logout-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .logout-container button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .logout-container button:hover {
+      background: #c0392b;
+    }
   </style>
 </head>
 <body>
   <header>Student Dashboard</header>
   <div class="dashboard">
-    <div class="card" id="attendance-card">My Attendance</div>
-    <div class="card" id="fee-card">Fee Status</div>
-    <div class="card" id="announcements-card">Announcements</div>
+    <div class="card" id="attendance-card"><i class="fas fa-calendar-check"></i> My Attendance</div>
+    <div class="card" id="fee-card"><i class="fas fa-wallet"></i> Fee Status</div>
+    <div class="card" id="announcements-card"><i class="fas fa-bullhorn"></i> Announcements</div>
 
-    <!-- Contact Link -->
-    <a href="index (4).html#contact" target="_blank" class="card-link">
-      <div class="card">Contact Administration</div>
+    <a href="index.html#contact" target="_blank" class="card-link">
+      <div class="card"><i class="fas fa-envelope"></i> Contact Administration</div>
     </a>
 
-    <!-- UPI Payment Link -->
-    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" target="_blank" class="card-link">
-      <div class="card">Pay Online via PhonePe / GPay</div>
+    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" class="card-link">
+      <div class="card"><i class="fas fa-money-check-alt"></i> Pay via PhonePe / GPay</div>
     </a>
+  </div>
+
+  <div class="logout-container">
+    <button onclick="logout()">Logout</button>
   </div>
 
   <!-- Firebase SDK -->
@@ -106,7 +134,6 @@
           });
         });
 
-        // Load announcements
         db.ref("notices").limitToLast(5).once("value", snapshot => {
           const data = snapshot.val();
           if (!data) {
@@ -127,6 +154,14 @@
         window.location.href = "login.html";
       }
     });
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Logout failed: " + error.message);
+      });
+    }
   </script>
 </body>
 </html>
