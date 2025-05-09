@@ -1,3 +1,4 @@
+<!-- Updated student-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,23 +7,15 @@
   <title>Student Dashboard - Maa Saraswati Shikshayatan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
+    /* Same style as before */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #2c3e50, #4ca1af);
       color: white;
     }
-    header {
-      background: #34495e;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .dashboard {
-      padding: 40px;
-      text-align: center;
-    }
+    header { background: #34495e; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; }
+    .dashboard { padding: 40px; text-align: center; }
     .card {
       background: rgba(255, 255, 255, 0.1);
       margin: 20px auto;
@@ -38,35 +31,15 @@
       font-size: 18px;
       flex-direction: column;
     }
-    .card i {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-    .card:hover {
-      transform: scale(1.05);
-    }
-    a.card-link {
-      color: white;
-      text-decoration: none;
-      display: block;
-    }
-    .logout-container {
-      text-align: center;
-      margin-top: 30px;
-    }
+    .card i { font-size: 22px; margin-bottom: 8px; }
+    .card:hover { transform: scale(1.05); }
+    a.card-link { color: white; text-decoration: none; display: block; }
+    .logout-container { text-align: center; margin-top: 30px; }
     .logout-container button {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
+      background: #e74c3c; color: white; border: none; padding: 12px 24px;
+      font-size: 16px; border-radius: 8px; cursor: pointer; transition: background 0.3s;
     }
-    .logout-container button:hover {
-      background: #c0392b;
-    }
+    .logout-container button:hover { background: #c0392b; }
   </style>
 </head>
 <body>
@@ -106,10 +79,12 @@
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
@@ -144,23 +119,25 @@
           db.ref("fees/" + uid).once("value", snap => {
             const data = snap.val();
             const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            const now = new Date();
+            const currentMonth = months[now.getMonth()];
             let html = "<h3>Fee Status</h3><ul style='list-style:none;padding:0'>";
             months.forEach(month => {
               const status = data && data[month] ? data[month] : "Unpaid";
-              html += `<li>${month}: ${status}</li>`;
+              html += `<li>${month}: ${status}`;
+              if (status === "Unpaid" && months.indexOf(month) < months.indexOf(currentMonth)) {
+                html += ` <button onclick=\"uploadReceipt('${uid}', '${month}')\">Upload Receipt</button>`;
+              }
+              html += `</li>`;
             });
             html += "</ul>";
             document.getElementById('fee-card').innerHTML = '<i class="fas fa-wallet"></i>' + html;
           });
 
-          // Announcements
+          // Notices
           db.ref("notices").limitToLast(5).once("value", snapshot => {
             const data = snapshot.val();
-            if (!data) {
-              document.getElementById("announcements-card").innerHTML = "<i class='fas fa-bullhorn'></i><h3>Announcements</h3><p>No announcements available.</p>";
-              return;
-            }
-            const notices = Object.values(data).reverse();
+            const notices = data ? Object.values(data).reverse() : [];
             let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
             notices.forEach(n => {
               const date = new Date(n.date).toLocaleString();
@@ -174,19 +151,37 @@
           db.ref("results/" + uid).once("value", snap => {
             const resultData = snap.val();
             let html = "<h3>Result</h3>";
-            if (resultData && resultData.result) {
-              html += `<p>${resultData.result}</p>`;
-            } else {
-              html += "<p>No result available.</p>";
-            }
+            html += resultData && resultData.result ? `<p>${resultData.result}</p>` : "<p>No result available.</p>";
             document.getElementById("result-card").innerHTML = '<i class="fas fa-file-alt"></i>' + html;
           });
-
         });
       } else {
         window.location.href = "login.html";
       }
     });
+
+    function uploadReceipt(uid, month) {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const storageRef = firebase.storage().ref(`receipts/${uid}_${month}.jpg`);
+        storageRef.put(file).then(() => {
+          storageRef.getDownloadURL().then(url => {
+            db.ref(`receiptUploads/${uid}/${month}`).set({
+              url: url,
+              status: "Pending",
+              uploadedAt: new Date().toISOString()
+            }).then(() => {
+              alert("Receipt uploaded successfully!");
+            });
+          });
+        }).catch(err => alert("Upload failed: " + err.message));
+      };
+      input.click();
+    }
 
     function logout() {
       firebase.auth().signOut().then(() => {
