@@ -55,11 +55,10 @@
 
     <!-- Login Form -->
     <div id="login-form">
-      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="text" id="login-phone" placeholder="Phone Number" required />
       <input type="password" id="login-password" placeholder="Password" required />
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
-      <div class="toggle" onclick="resetPassword()">Forgot password?</div>
     </div>
 
     <!-- Signup Form -->
@@ -77,7 +76,6 @@
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
@@ -91,7 +89,6 @@
       appId: "1:1086364385293:web:91e762be2245715e26d544"
     };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.database();
 
     function showSignUp() {
@@ -109,72 +106,68 @@
     function signup() {
       const name = document.getElementById("name").value.trim();
       const dob = document.getElementById("dob").value;
-      const phone = document.getElementById("phone").value;
+      const phone = document.getElementById("phone").value.trim();
       const email = document.getElementById("email").value.trim();
       const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
 
-      if (!name || !email || !password) {
+      if (!name || !phone || !password) {
         alert("Please fill in all required fields.");
         return;
       }
 
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          const firstChar = name.charAt(0).toUpperCase();
-          const uidIndexRef = db.ref('uidIndex/' + firstChar);
+      const firstChar = name.charAt(0).toUpperCase();
+      const uidIndexRef = db.ref('uidIndex/' + firstChar);
 
-          uidIndexRef.transaction(current => (current || 0) + 1).then(result => {
-            const serial = result.snapshot.val().toString().padStart(2, '0');
-            const uid = firstChar + serial;
+      uidIndexRef.transaction(current => (current || 0) + 1).then(result => {
+        const serial = result.snapshot.val().toString().padStart(2, '0');
+        const uid = firstChar + serial;
 
-            const studentData = {
-              name: name,
-              dob: dob,
-              phone: phone,
-              email: email,
-              address: address,
-              uid: uid
-            };
+        const studentData = {
+          name: name,
+          dob: dob,
+          phone: phone,
+          email: email,
+          address: address,
+          uid: uid,
+          password: password
+        };
 
-            db.ref('students/' + uid).set(studentData)
-              .then(() => {
-                alert(`Account created successfully!\nYour UID is: ${uid}`);
-                showLogin();
-              });
+        db.ref('students/' + uid).set(studentData)
+          .then(() => {
+            alert(`Account created successfully!\nYour UID is: ${uid}`);
+            showLogin();
           });
-        })
-        .catch((error) => {
-          alert("Error: " + error.message);
-        });
+      });
     }
 
     function login() {
-      const email = document.getElementById("login-email").value;
+      const phone = document.getElementById("login-phone").value.trim();
       const password = document.getElementById("login-password").value;
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          if (user.email === "rajnitirgalpokotha@gmail.com") {
-            window.location.href = "dashboard.html";
-          } else {
-            window.location.href = "student-dashboard.html";
+      if (!phone || !password) {
+        alert("Please enter both phone and password.");
+        return;
+      }
+
+      db.ref('students').once('value')
+        .then(snapshot => {
+          let found = false;
+          snapshot.forEach(child => {
+            const student = child.val();
+            if (student.phone === phone && student.password === password) {
+              found = true;
+              alert("Login successful!");
+              window.location.href = "student-dashboard.html";
+            }
+          });
+          if (!found) {
+            alert("Invalid phone number or password.");
           }
         })
-        .catch((error) => {
-          alert("Login failed: " + error.message);
+        .catch(error => {
+          alert("Login error: " + error.message);
         });
-    }
-
-    function resetPassword() {
-      const email = prompt("Enter your email to reset password:");
-      if (email) {
-        auth.sendPasswordResetEmail(email)
-          .then(() => alert("Password reset link sent to your email."))
-          .catch(err => alert("Error: " + err.message));
-      }
     }
   </script>
 </body>
