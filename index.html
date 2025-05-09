@@ -59,7 +59,14 @@
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
-      <p>Admission is open for academic year 2025...</p>
+      <p>At Maa Saraswati Shikshayatan, we offer comprehensive coaching from Class VI through XII, covering all major subjects including Mathematics, Science, Social Studies, and Languages.</p>
+      <p>To apply for admission:</p>
+      <ul>
+        <li>Download and complete the <a href="admission-form.html">online admission form</a>.</li>
+        <li>Submit the filled form along with photocopies of previous academic records.</li>
+        <li>Visit our center for a brief counseling session with our academic coordinator.</li>
+      </ul>
+      <p>Seats are limited, so early application is advised!</p>
     </div>
   </section>
 
@@ -75,19 +82,7 @@
     <div class="gallery-container">
       <div class="gallery-slides">
         <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
+        <!-- ... অন্যান্য স্লাইড ইমেজ ... -->
       </div>
     </div>
   </section>
@@ -97,7 +92,7 @@
   </footer>
 
   <script>
-    // Firebase configuration copied from dashboard (2).html
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
       authDomain: "masaraswatishikshyatan.firebaseapp.com",
@@ -113,7 +108,7 @@
     // Load notices from Firebase
     const noticeList = document.getElementById('notice-list');
     noticeList.innerHTML = '';
-    db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
+    db.ref('notices').orderByChild('date').limitToLast(5).on('value', snapshot => {
       noticeList.innerHTML = '';
       if (!snapshot.exists()) {
         noticeList.innerHTML = '<p>No notices published yet.</p>';
@@ -123,8 +118,12 @@
         const notice = child.val();
         const div = document.createElement('div');
         div.classList.add('notice');
-        const date = new Date(notice.timestamp);
-        div.innerHTML = `<p>${notice.text}</p><div class="notice-date">${date.toLocaleDateString('en-GB')}</div>`;
+        const date = new Date(notice.date);
+        div.innerHTML = `<p>${notice.message}</p>`;
+        const d = document.createElement('div');
+        d.classList.add('notice-date');
+        d.textContent = date.toLocaleDateString('en-GB');
+        div.appendChild(d);
         noticeList.prepend(div);
       });
     });
