@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Admin Panel - Maa Saraswati Shikshayatan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,23 +14,35 @@
     }
     .box {
       background: white;
-      max-width: 600px;
+      max-width: 700px;
       margin: 20px auto;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+    .box:hover {
+      transform: scale(1.02);
     }
     input, select, textarea, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     h2 {
       background: #34495e;
       color: white;
       padding: 15px;
       border-radius: 10px;
+      font-size: 26px;
+    }
+    h3 {
+      color: #2c3e50;
+      font-size: 22px;
+      margin-bottom: 10px;
     }
     table {
       width: 100%;
@@ -44,20 +57,33 @@
       background: #333;
       color: white;
     }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #2980b9;
+    }
     .section-title {
-      margin-top: 40px;
+      margin-top: 30px;
       font-size: 22px;
-      color: #2c3e50;
+    }
+    i {
+      margin-right: 8px;
+      color: #2980b9;
     }
   </style>
 </head>
 <body>
 
-  <h2>Admin Dashboard</h2>
+  <h2><i class="fas fa-cogs"></i> Admin Dashboard</h2>
 
   <!-- Student Profile & Fee -->
   <div class="box">
-    <h3>Search Student by UID</h3>
+    <h3><i class="fas fa-user-search"></i> Search Student by UID</h3>
     <input type="text" id="uid" placeholder="Enter Student UID (e.g. R01)" />
     <button onclick="loadStudent()">Load Student Profile & Fees</button>
 
@@ -81,7 +107,7 @@
 
   <!-- Result Upload -->
   <div class="box">
-    <h3 class="section-title">Upload Student Result</h3>
+    <h3><i class="fas fa-file-upload"></i> Upload Student Result</h3>
     <input type="text" id="result-uid" placeholder="Enter UID" />
     <textarea id="result-data" placeholder="Enter result details..."></textarea>
     <button onclick="uploadResult()">Upload Result</button>
@@ -89,15 +115,34 @@
 
   <!-- Notice Post -->
   <div class="box">
-    <h3 class="section-title">Post a Notice</h3>
+    <h3><i class="fas fa-bullhorn"></i> Post a Notice</h3>
     <textarea id="notice" placeholder="Enter notice content..."></textarea>
     <button onclick="postNotice()">Publish Notice</button>
   </div>
 
   <!-- Manage Notices -->
   <div class="box">
-    <h3 class="section-title">Manage Notices</h3>
+    <h3><i class="fas fa-list"></i> Manage Notices</h3>
     <div id="all-notices">Loading notices...</div>
+  </div>
+
+  <!-- Attendance -->
+  <div class="box">
+    <h3><i class="fas fa-calendar-check"></i> Attendance Management</h3>
+    <input type="text" id="att-uid" placeholder="Enter UID" />
+    <input type="date" id="att-date" />
+    <select id="att-status">
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+    </select>
+    <button onclick="markAttendance()">Save Attendance</button>
+  </div>
+
+  <!-- All Students -->
+  <div class="box">
+    <h3><i class="fas fa-users"></i> All Students (UID Order)</h3>
+    <button onclick="loadAllStudents()">Load All Students</button>
+    <div id="student-list"></div>
   </div>
 
   <!-- Firebase -->
@@ -148,10 +193,8 @@
 
         db.ref(`fees/${uid}`).once("value", snapshot => {
           const data = snapshot.val();
-          const months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-          ];
+          const months = ["January", "February", "March", "April", "May", "June",
+                          "July", "August", "September", "October", "November", "December"];
           let paid = 0;
           let html = `<table><tr><th>Month</th><th>Status</th></tr>`;
           months.forEach(month => {
@@ -220,6 +263,38 @@
           loadAllNotices();
         });
       }
+    }
+
+    function markAttendance() {
+      const uid = document.getElementById("att-uid").value.trim();
+      const date = document.getElementById("att-date").value;
+      const status = document.getElementById("att-status").value;
+      if (!uid || !date || !status) return alert("Fill all fields");
+
+      db.ref("attendance/" + uid + "/" + date).set(status)
+        .then(() => alert("Attendance saved!"))
+        .catch(err => alert("Error: " + err.message));
+    }
+
+    function loadAllStudents() {
+      db.ref("students").once("value").then(snapshot => {
+        const data = snapshot.val();
+        if (!data) {
+          document.getElementById("student-list").innerHTML = "<p>No students found.</p>";
+          return;
+        }
+
+        const studentsArray = Object.keys(data)
+          .map(uid => ({ uid, name: data[uid].name }))
+          .sort((a, b) => a.uid.localeCompare(b.uid));
+
+        let html = "<table><tr><th>UID</th><th>Name</th></tr>";
+        studentsArray.forEach(s => {
+          html += `<tr><td>${s.uid}</td><td>${s.name}</td></tr>`;
+        });
+        html += "</table>";
+        document.getElementById("student-list").innerHTML = html;
+      });
     }
 
     window.onload = function () {
