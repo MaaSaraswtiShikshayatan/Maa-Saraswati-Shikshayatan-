@@ -8,12 +8,9 @@
   <style>
     * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background: linear-gradient(to right, #141e30, #243b55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       height: 100vh;
     }
     .container {
@@ -21,11 +18,9 @@
       backdrop-filter: blur(15px);
       padding: 40px 30px;
       border-radius: 20px;
-      width: 100%;
-      max-width: 400px;
+      width: 100%; max-width: 400px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-      color: white;
-      animation: fadeIn 0.5s ease;
+      color: white; animation: fadeIn 0.5s ease;
     }
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(20px);}
@@ -36,40 +31,27 @@
     .logo h1 { font-size: 22px; margin: 0; color: #f1f1f1; }
     h2 { text-align: center; font-size: 26px; margin-bottom: 20px; }
     input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      font-size: 15px;
+      width: 100%; padding: 12px; margin: 10px 0;
+      border: none; border-radius: 10px;
+      background: rgba(255,255,255,0.15); color: white; font-size: 15px;
     }
     input::placeholder { color: #ddd; }
-    input:focus {
-      background: rgba(255,255,255,0.25);
-      outline: none;
-    }
+    input:focus { background: rgba(255,255,255,0.25); outline: none; }
     button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 10px;
+      width: 100%; padding: 12px; margin-top: 10px;
+      border: none; border-radius: 10px;
       background: linear-gradient(to right, #0072ff, #00c6ff);
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
+      color: white; font-size: 16px; cursor: pointer;
     }
-    button:hover { background: linear-gradient(to right, #005be0, #00aaff); }
+    button:hover {
+      background: linear-gradient(to right, #005be0, #00aaff);
+    }
     .toggle {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #f1f1f1;
-      text-decoration: underline;
-      cursor: pointer;
+      text-align: center; margin-top: 15px;
+      font-size: 14px; color: #f1f1f1;
+      text-decoration: underline; cursor: pointer;
     }
+    #recaptcha-container { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -83,6 +65,7 @@
     <div id="login-form">
       <input type="text" id="login-identifier" placeholder="Email or Phone Number" />
       <input type="password" id="login-password" placeholder="Password" />
+      <div id="recaptcha-container"></div>
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="forgotPassword()">Forgot Password?</div>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
@@ -95,6 +78,7 @@
       <input type="email" id="email" placeholder="Email Address (optional)" />
       <input type="text" id="address" placeholder="Address" />
       <input type="password" id="password" placeholder="Password" />
+      <div id="recaptcha-container-signup"></div>
       <button onclick="signup()">Sign Up</button>
       <div class="toggle" onclick="showLogin()">Already have an account? Login</div>
     </div>
@@ -122,12 +106,16 @@
       document.getElementById("signup-form").style.display = "block";
       document.getElementById("form-title").innerText = "Sign Up";
     }
-
     function showLogin() {
       document.getElementById("signup-form").style.display = "none";
       document.getElementById("login-form").style.display = "block";
       document.getElementById("form-title").innerText = "Login";
     }
+
+    window.onload = () => {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
+      window.recaptchaVerifierSignup = new firebase.auth.RecaptchaVerifier('recaptcha-container-signup', { size: 'invisible' });
+    };
 
     function signup() {
       const name = document.getElementById("name").value.trim();
@@ -137,31 +125,36 @@
       const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
 
-      if ((!email && !phone) || !password || !name) {
-        alert("Please fill in required fields.");
+      if (!name || !password || (!email && !phone)) {
+        alert("Please fill in all required fields.");
         return;
       }
 
       const firstChar = name.charAt(0).toUpperCase();
       const uidIndexRef = db.ref('uidIndex/' + firstChar);
-
       uidIndexRef.transaction(current => (current || 0) + 1).then(result => {
         const serial = result.snapshot.val().toString().padStart(2, '0');
         const uid = firstChar + serial;
-
-        const studentData = { name, dob, phone, email, address, uid, password };
+        const studentData = { name, dob, phone, email, address, uid };
 
         if (email) {
           auth.createUserWithEmailAndPassword(email, password)
             .then(() => db.ref('students/' + uid).set(studentData))
             .then(() => {
-              alert(`Account created! Your UID is ${uid}`);
+              alert(`Account created! UID: ${uid}`);
               showLogin();
             })
-            .catch(error => alert("Signup error: " + error.message));
+            .catch(e => alert("Signup error: " + e.message));
         } else {
-          // phone-only auth requires custom backend or Firebase Phone Auth
-          alert("Phone-only signup not yet supported here. Please enter an email.");
+          auth.signInWithPhoneNumber(phone, window.recaptchaVerifierSignup)
+            .then(result => {
+              const code = prompt("Enter the OTP sent to your phone:");
+              return result.confirm(code).then(() => {
+                db.ref('students/' + uid).set(studentData);
+                alert(`Phone signup complete! UID: ${uid}`);
+                showLogin();
+              });
+            }).catch(e => alert("Phone signup failed: " + e.message));
         }
       });
     }
@@ -170,34 +163,34 @@
       const identifier = document.getElementById("login-identifier").value.trim();
       const password = document.getElementById("login-password").value;
 
-      if (!identifier || !password) {
-        alert("Please enter Email/Phone and password.");
-        return;
-      }
-
-      if (identifier.includes('@')) {
+      if (identifier.includes("@")) {
         auth.signInWithEmailAndPassword(identifier, password)
           .then(() => {
             if (identifier === "rajnitirgalpokotha@gmail.com") {
-              window.location.href = "dashboard.html";
+              location.href = "dashboard.html";
             } else {
-              window.location.href = "student-dashboard.html";
+              location.href = "student-dashboard.html";
             }
-          })
-          .catch(error => alert("Login failed: " + error.message));
+          }).catch(e => alert("Login failed: " + e.message));
       } else {
-        alert("Phone number login not yet enabled. Please use email.");
+        auth.signInWithPhoneNumber(identifier, window.recaptchaVerifier)
+          .then(result => {
+            const code = prompt("Enter the OTP sent to your phone:");
+            return result.confirm(code).then(() => {
+              location.href = "student-dashboard.html";
+            });
+          }).catch(e => alert("Phone login failed: " + e.message));
       }
     }
 
     function forgotPassword() {
-      const email = prompt("Enter your email address to reset password:");
-      if (email && email.includes('@')) {
+      const email = prompt("Enter your email to reset password:");
+      if (email && email.includes("@")) {
         auth.sendPasswordResetEmail(email)
-          .then(() => alert("Reset link sent to your email."))
-          .catch(error => alert("Error: " + error.message));
+          .then(() => alert("Reset link sent."))
+          .catch(e => alert("Error: " + e.message));
       } else {
-        alert("Please enter a valid email.");
+        alert("Please enter a valid email address.");
       }
     }
   </script>
