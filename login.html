@@ -20,7 +20,8 @@
       border-radius: 20px;
       width: 100%; max-width: 400px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-      color: white; animation: fadeIn 0.5s ease;
+      color: white;
+      animation: fadeIn 0.5s ease;
     }
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(20px);}
@@ -51,7 +52,7 @@
       font-size: 14px; color: #f1f1f1;
       text-decoration: underline; cursor: pointer;
     }
-    #recaptcha-container { margin-top: 10px; }
+    #recaptcha-container, #recaptcha-container-signup { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -74,7 +75,7 @@
     <div id="signup-form" style="display: none;">
       <input type="text" id="name" placeholder="Full Name" />
       <input type="text" id="dob" placeholder="Date of Birth" />
-      <input type="text" id="phone" placeholder="Phone Number" />
+      <input type="text" id="phone" placeholder="Phone Number (10-digit)" />
       <input type="email" id="email" placeholder="Email Address (optional)" />
       <input type="text" id="address" placeholder="Address" />
       <input type="password" id="password" placeholder="Password" />
@@ -84,9 +85,11 @@
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
@@ -120,7 +123,7 @@
     function signup() {
       const name = document.getElementById("name").value.trim();
       const dob = document.getElementById("dob").value;
-      const phone = document.getElementById("phone").value.trim();
+      let phone = document.getElementById("phone").value.trim();
       const email = document.getElementById("email").value.trim();
       const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
@@ -128,6 +131,14 @@
       if (!name || !password || (!email && !phone)) {
         alert("Please fill in all required fields.");
         return;
+      }
+      if (phone && !phone.startsWith('+')) {
+        if (phone.length === 10) {
+          phone = '+91' + phone;
+        } else {
+          alert("Invalid phone number. Please enter a 10-digit number.");
+          return;
+        }
       }
 
       const firstChar = name.charAt(0).toUpperCase();
@@ -173,7 +184,11 @@
             }
           }).catch(e => alert("Login failed: " + e.message));
       } else {
-        auth.signInWithPhoneNumber(identifier, window.recaptchaVerifier)
+        let phone = identifier;
+        if (!phone.startsWith('+') && phone.length === 10) {
+          phone = '+91' + phone;
+        }
+        auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
           .then(result => {
             const code = prompt("Enter the OTP sent to your phone:");
             return result.confirm(code).then(() => {
