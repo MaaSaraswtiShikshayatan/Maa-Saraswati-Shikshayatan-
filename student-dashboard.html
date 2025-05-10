@@ -4,112 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Dashboard - Maa Saraswati Shikshayatan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #2c3e50, #4ca1af);
-      color: white;
-    }
-    header {
-      background: #34495e;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .dashboard {
-      padding: 40px;
-      text-align: center;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      margin: 20px auto;
-      padding: 25px 30px;
-      border-radius: 12px;
-      max-width: 400px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      transition: transform 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      font-size: 18px;
-      flex-direction: column;
-    }
-    .card i {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-    .card:hover {
-      transform: scale(1.05);
-    }
-    a.card-link {
-      color: white;
-      text-decoration: none;
-      display: block;
-    }
-    .logout-container {
-      text-align: center;
-      margin-top: 30px;
-    }
-    .logout-container button {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .logout-container button:hover {
-      background: #c0392b;
-    }
-  </style>
 </head>
-<body>
-  <header>Student Dashboard</header>
-  <div class="dashboard">
-    <div class="card" id="attendance-card">
-      <i class="fas fa-calendar-check"></i>
-      My Attendance
+<body class="bg-gradient-to-br from-gray-800 to-blue-500 text-white min-h-screen">
+  <header class="bg-gray-900 py-6 text-center text-3xl font-bold shadow-md">Student Dashboard</header>
+
+  <div class="max-w-4xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-calendar-check text-3xl mb-2"></i>
+      <p class="text-lg font-medium">My Attendance</p>
     </div>
-    <div class="card" id="fee-card">
-      <i class="fas fa-wallet"></i>
-      Fee Status
+    <div id="fee-card" class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-wallet text-3xl mb-2"></i>
+      <p class="text-lg font-medium">Fee Status</p>
     </div>
-    <div class="card" id="announcements-card">
-      <i class="fas fa-bullhorn"></i>
-      Announcements
+    <div id="announcements-card" class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-bullhorn text-3xl mb-2"></i>
+      <p class="text-lg font-medium">Announcements</p>
     </div>
-    <div class="card" id="result-card">
-      <i class="fas fa-file-alt"></i>
-      Result
+    <div id="result-card" class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-file-alt text-3xl mb-2"></i>
+      <p class="text-lg font-medium">Result</p>
     </div>
-    <a href="index.html#contact" target="_blank" class="card-link">
-      <div class="card">
-        <i class="fas fa-envelope"></i>
-        Contact Administration
-      </div>
+    <a href="index.html#contact" target="_blank" class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-envelope text-3xl mb-2"></i>
+      <p class="text-lg font-medium">Contact Administration</p>
     </a>
-    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" class="card-link">
-      <div class="card">
-        <i class="fas fa-money-check-alt"></i>
-        Pay via PhonePe / GPay
-      </div>
+    <a href="upi://pay?pa=9851123356@upi&pn=Maa%20Saraswati%20Shikshayatan" class="bg-white/10 hover:bg-white/20 transition p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+      <i class="fas fa-money-check-alt text-3xl mb-2"></i>
+      <p class="text-lg font-medium">Pay via PhonePe / GPay</p>
     </a>
   </div>
 
-  <div class="logout-container">
-    <button onclick="logout()">Logout</button>
+  <div class="text-center mt-10">
+    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 transition text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-md">
+      Logout
+    </button>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- Your JavaScript logic remains unchanged -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
@@ -140,48 +78,40 @@
             return;
           }
 
-          // Fee Status
           db.ref("fees/" + uid).once("value", snap => {
             const data = snap.val();
             const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-            let html = "<h3>Fee Status</h3><ul style='list-style:none;padding:0'>";
+            let html = "<h3 class='text-xl font-semibold mb-2'>Fee Status</h3><ul class='text-left'>";
             months.forEach(month => {
               const status = data && data[month] ? data[month] : "Unpaid";
               html += `<li>${month}: ${status}</li>`;
             });
             html += "</ul>";
-            document.getElementById('fee-card').innerHTML = '<i class="fas fa-wallet"></i>' + html;
+            document.getElementById('fee-card').innerHTML = '<i class="fas fa-wallet text-3xl mb-2"></i>' + html;
           });
 
-          // Announcements
           db.ref("notices").limitToLast(5).once("value", snapshot => {
             const data = snapshot.val();
             if (!data) {
-              document.getElementById("announcements-card").innerHTML = "<i class='fas fa-bullhorn'></i><h3>Announcements</h3><p>No announcements available.</p>";
+              document.getElementById("announcements-card").innerHTML = "<i class='fas fa-bullhorn text-3xl mb-2'></i><h3>No announcements available.</h3>";
               return;
             }
             const notices = Object.values(data).reverse();
-            let html = "<h3>Announcements</h3><ul style='list-style:none;padding:0'>";
+            let html = "<h3 class='text-xl font-semibold mb-2'>Announcements</h3><ul class='text-left'>";
             notices.forEach(n => {
               const date = new Date(n.date).toLocaleString();
               html += `<li><strong>${date}</strong>: ${n.message}</li>`;
             });
             html += "</ul>";
-            document.getElementById("announcements-card").innerHTML = '<i class="fas fa-bullhorn"></i>' + html;
+            document.getElementById("announcements-card").innerHTML = '<i class="fas fa-bullhorn text-3xl mb-2"></i>' + html;
           });
 
-          // Result
           db.ref("results/" + uid).once("value", snap => {
             const resultData = snap.val();
-            let html = "<h3>Result</h3>";
-            if (resultData && resultData.result) {
-              html += `<p>${resultData.result}</p>`;
-            } else {
-              html += "<p>No result available.</p>";
-            }
-            document.getElementById("result-card").innerHTML = '<i class="fas fa-file-alt"></i>' + html;
+            let html = "<h3 class='text-xl font-semibold mb-2'>Result</h3>";
+            html += resultData && resultData.result ? `<p>${resultData.result}</p>` : "<p>No result available.</p>";
+            document.getElementById("result-card").innerHTML = '<i class="fas fa-file-alt text-3xl mb-2"></i>' + html;
           });
-
         });
       } else {
         window.location.href = "login.html";
