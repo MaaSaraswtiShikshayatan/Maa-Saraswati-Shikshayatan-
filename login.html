@@ -52,7 +52,6 @@
       font-size: 14px; color: #f1f1f1;
       text-decoration: underline; cursor: pointer;
     }
-    #recaptcha-container, #recaptcha-container-signup { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -64,9 +63,8 @@
     <h2 id="form-title">Login</h2>
 
     <div id="login-form">
-      <input type="text" id="login-identifier" placeholder="Email or Phone Number" />
+      <input type="email" id="login-email" placeholder="Email Address" />
       <input type="password" id="login-password" placeholder="Password" />
-      <div id="recaptcha-container"></div>
       <button onclick="login()">Login</button>
       <div class="toggle" onclick="forgotPassword()">Forgot Password?</div>
       <div class="toggle" onclick="showSignUp()">Don't have an account? Sign up</div>
@@ -76,10 +74,9 @@
       <input type="text" id="name" placeholder="Full Name" />
       <input type="text" id="dob" placeholder="Date of Birth" />
       <input type="text" id="phone" placeholder="Phone Number (10-digit)" />
-      <input type="email" id="email" placeholder="Email Address (optional)" />
+      <input type="email" id="email" placeholder="Email Address" />
       <input type="text" id="address" placeholder="Address" />
       <input type="password" id="password" placeholder="Password" />
-      <div id="recaptcha-container-signup"></div>
       <button onclick="signup()">Sign Up</button>
       <div class="toggle" onclick="showLogin()">Already have an account? Login</div>
     </div>
@@ -109,16 +106,12 @@
       document.getElementById("signup-form").style.display = "block";
       document.getElementById("form-title").innerText = "Sign Up";
     }
+
     function showLogin() {
       document.getElementById("signup-form").style.display = "none";
       document.getElementById("login-form").style.display = "block";
       document.getElementById("form-title").innerText = "Login";
     }
-
-    window.onload = () => {
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
-      window.recaptchaVerifierSignup = new firebase.auth.RecaptchaVerifier('recaptcha-container-signup', { size: 'invisible' });
-    };
 
     function signup() {
       const name = document.getElementById("name").value.trim();
@@ -128,17 +121,12 @@
       const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
 
-      if (!name || !password || (!email && !phone)) {
+      if (!name || !email || !password) {
         alert("Please fill in all required fields.");
         return;
       }
-      if (phone && !phone.startsWith('+')) {
-        if (phone.length === 10) {
-          phone = '+91' + phone;
-        } else {
-          alert("Invalid phone number. Please enter a 10-digit number.");
-          return;
-        }
+      if (phone && phone.length === 10) {
+        phone = '+91' + phone;
       }
 
       const firstChar = name.charAt(0).toUpperCase();
@@ -148,54 +136,28 @@
         const uid = firstChar + serial;
         const studentData = { name, dob, phone, email, address, uid };
 
-        if (email) {
-          auth.createUserWithEmailAndPassword(email, password)
-            .then(() => db.ref('students/' + uid).set(studentData))
-            .then(() => {
-              alert(`Account created! UID: ${uid}`);
-              showLogin();
-            })
-            .catch(e => alert("Signup error: " + e.message));
-        } else {
-          auth.signInWithPhoneNumber(phone, window.recaptchaVerifierSignup)
-            .then(result => {
-              const code = prompt("Enter the OTP sent to your phone:");
-              return result.confirm(code).then(() => {
-                db.ref('students/' + uid).set(studentData);
-                alert(`Phone signup complete! UID: ${uid}`);
-                showLogin();
-              });
-            }).catch(e => alert("Phone signup failed: " + e.message));
-        }
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => db.ref('students/' + uid).set(studentData))
+          .then(() => {
+            alert(`Account created! UID: ${uid}`);
+            showLogin();
+          })
+          .catch(e => alert("Signup error: " + e.message));
       });
     }
 
     function login() {
-      const identifier = document.getElementById("login-identifier").value.trim();
+      const email = document.getElementById("login-email").value.trim();
       const password = document.getElementById("login-password").value;
 
-      if (identifier.includes("@")) {
-        auth.signInWithEmailAndPassword(identifier, password)
-          .then(() => {
-            if (identifier === "rajnitirgalpokotha@gmail.com") {
-              location.href = "dashboard.html";
-            } else {
-              location.href = "student-dashboard.html";
-            }
-          }).catch(e => alert("Login failed: " + e.message));
-      } else {
-        let phone = identifier;
-        if (!phone.startsWith('+') && phone.length === 10) {
-          phone = '+91' + phone;
-        }
-        auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
-          .then(result => {
-            const code = prompt("Enter the OTP sent to your phone:");
-            return result.confirm(code).then(() => {
-              location.href = "student-dashboard.html";
-            });
-          }).catch(e => alert("Phone login failed: " + e.message));
-      }
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          if (email === "rajnitirgalpokotha@gmail.com") {
+            location.href = "dashboard.html";
+          } else {
+            location.href = "student-dashboard.html";
+          }
+        }).catch(e => alert("Login failed: " + e.message));
     }
 
     function forgotPassword() {
