@@ -1,99 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Contact Us - Maa Saraswati Shikshayatan</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact - Maa Saraswati Shikshayatan</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #f5f7fa, #c3cfe2);
       margin: 0;
       padding: 0;
+      background: #f8f9fa;
     }
-    .container {
-      max-width: 800px;
-      margin: 50px auto;
+    .header {
+      background: #003366;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .contact-box {
+      max-width: 900px;
+      margin: 30px auto;
       background: white;
-      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     h2 {
-      text-align: center;
+      color: #003366;
+    }
+    p, a {
+      font-size: 16px;
       color: #333;
+      line-height: 1.8;
     }
-    form {
-      display: flex;
-      flex-direction: column;
+    a {
+      color: #0077cc;
+      text-decoration: none;
     }
-    input, textarea {
-      margin: 10px 0;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #2e86de;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .info {
-      margin-top: 30px;
-    }
-    .info p {
-      margin: 6px 0;
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Contact Us</h2>
-    <form onsubmit="sendMessage(event)">
-      <input type="text" id="name" placeholder="Your Name" required />
-      <input type="email" id="email" placeholder="Your Email" required />
-      <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-
-    <div class="info">
-      <h3>Our Address</h3>
-      <p><strong>Coaching Name:</strong> Maa Saraswati Shikshayatan</p>
-      <p><strong>Location:</strong> Amtolighat, Kupadaha, Bamongola, Malda</p>
-      <p><strong>Phone:</strong> 9851123356</p>
-      <p><strong>Email:</strong> rajnitirgalpokotha@gmail.com</p>
-    </div>
+  <div class="header">
+    <h1>Maa Saraswati Shikshayatan</h1>
+    <p>Contact Information</p>
   </div>
-
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="firebase-config.js"></script>
-
-  <script>
-    function sendMessage(event) {
-      event.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const message = document.getElementById("message").value;
-
-      firebase.database().ref("messages").push({
-        name,
-        email,
-        message,
-        timestamp: new Date().toISOString()
-      }).then(() => {
-        alert("Message sent successfully!");
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("message").value = "";
-      }).catch((err) => {
-        alert("Error: " + err.message);
-      });
-    }
-  </script>
+  <div class="contact-box">
+    <h2>Get in Touch</h2>
+    <p><strong>Address:</strong> <a href="https://maps.google.com/?q=Amtalighat, Kupadaha, Bamangola, Malda, 733142" target="_blank">Amtalighat, Kupadaha, Bamangola, Malda, 733142</a></p>
+    <p><strong>Phone:</strong> <a href="tel:9851123356">9851123356</a>, <a href="tel:9851615653">9851615653</a></p>
+    <p><strong>Email:</strong> <a href="mailto:masaraswatisikshyatan@gmail.com">masaraswatisikshyatan@gmail.com</a></p>
+    <p><strong>WhatsApp:</strong> <a href="https://wa.me/9851123356" target="_blank">Chat on WhatsApp</a></p>
+    <p><strong>Principal's Facebook:</strong> <a href="https://www.facebook.com/share/198QaF31gi/" target="_blank">Visit Profile</a></p>
+    <p><strong>Website:</strong> <a href="https://crpusd.org/Schools" target="_blank">crpusd.org/Schools</a></p>
+  </div>
 </body>
 </html>
