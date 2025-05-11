@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +55,6 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      flex-wrap: wrap;
       align-items: center;
       gap: 20px;
       background: #fff;
@@ -104,12 +102,19 @@
       padding: 10px;
       border-radius: 10px;
     }
+    .scroll-box {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .scroll-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scroll-box::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
     @media (max-width: 600px) {
-  nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
       nav {
         display: flex;
         flex-direction: column;
@@ -160,7 +165,7 @@
     <h2 style="text-align:center;">Message from the Head</h2>
     <div class="profile-box">
       <img src="images/FB_IMG_1746852698228.jpg" alt="Head" style="width: 160px; height: 160px; border-radius: 10px; object-fit: cover;">
-      <div style="flex: 1;">
+      <div class="scroll-box" style="flex: 1;">
         <p style="font-size: 16px; line-height: 1.6;">
           <strong>Mr. Anup Sarkar</strong>, our respected Principal, is the guiding force behind Maa Saraswati Shikshayatan. With over a decade of experience in the field of education, he believes that a disciplined environment and personal attention to each student can foster not just academic success, but also strong moral character and leadership.
           <br><br>
@@ -169,37 +174,37 @@
       </div>
     </div>
   </section>
-  
-<section class="section" id="admission">
-  <h2 style="text-align:center;">Admission Information</h2>
-  <p style="font-size: 16px; line-height: 1.8;">
-    Maa Saraswati Shikshayatan offers academic guidance for students from <strong>Class 9 to Class 12</strong>.
-    We specialize in the <strong>Arts stream</strong>, focusing on subjects such as:
-    <ul>
-      <li>Bengali</li>
-      <li>English</li>
-      <li>History</li>
-      <li>Geography</li>
-      <li>Political Science</li>
-      <li>Philosophy</li>
-    </ul>
-    <br>
-    <strong>Admission Process:</strong><br>
-    Students or guardians can visit the institute during working hours for queries and enrollment. Necessary documents include:
-    <ul>
-      <li>Previous class marksheet</li>
-      <li>Recent passport-size photograph</li>
-      <li>School ID card (if any)</li>
-    </ul>
-    For more details, feel free to contact us or visit our campus directly.
-  </p>
-</section>
-
-<section class="section" id="gallery">
+  <section class="section" id="admission">
+    <h2 style="text-align:center;">Admission Information</h2>
+    <div class="scroll-box">
+      <p style="font-size: 16px; line-height: 1.8;">
+        Maa Saraswati Shikshayatan offers academic guidance for students from <strong>Class 9 to Class 12</strong>.
+        We specialize in the <strong>Arts stream</strong>, focusing on subjects such as:
+        <ul>
+          <li>Bengali</li>
+          <li>English</li>
+          <li>History</li>
+          <li>Geography</li>
+          <li>Political Science</li>
+          <li>Philosophy</li>
+        </ul>
+        <br>
+        <strong>Admission Process:</strong><br>
+        Students or guardians can visit the institute during working hours for queries and enrollment. Necessary documents include:
+        <ul>
+          <li>Previous class marksheet</li>
+          <li>Recent passport-size photograph</li>
+          <li>School ID card (if any)</li>
+        </ul>
+        For more details, feel free to contact us or visit our campus directly.
+      </p>
+    </div>
+  </section>
+  <section class="section" id="gallery">
     <h2 style="text-align:center;">Photo Gallery</h2>
     <div class="gallery-container">
       <div class="gallery-slides" id="gallery-slides">
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div><div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
+        <!-- Gallery images here -->
       </div>
     </div>
   </section>
@@ -213,18 +218,13 @@
     <h3 style="text-align:center; margin-top: 30px;">Recent Feedbacks</h3>
     <div id="latest-feedbacks"></div>
   </section>
-  
-
-
-  
-    <footer>
-      <p style="font-size: 14px; line-height: 1.6;">
-        Address: Amtalighat, Kupadaha, Bamangola, Malda, 733142<br>
-        Phone: 9851123356 / 9851615653<br>
-        &copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.
-      </p>
-    </footer>
-    
+  <footer>
+    <p style="font-size: 14px; line-height: 1.6;">
+      Address: Amtalighat, Kupadaha, Bamangola, Malda, 733142<br>
+      Phone: 9851123356 / 9851615653<br>
+      &copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.
+    </p>
+  </footer>
   <script>
     let galleryIndex = 0;
     const slides = document.querySelectorAll('.gallery-slide');
