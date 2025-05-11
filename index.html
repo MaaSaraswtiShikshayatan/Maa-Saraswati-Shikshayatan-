@@ -269,20 +269,6 @@
         document.getElementById("feedback-text").value = '';
       });
     }
-<script>
-  firebase.database().ref("notices").orderByChild("date").limitToLast(10).on("value", snap => {
-    const noticeList = document.getElementById("notice-list");
-    noticeList.innerHTML = "";
-    const data = [];
-    snap.forEach(child => data.push(child.val()));
-    data.reverse().forEach(n => {
-      const li = document.createElement("li");
-      const date = new Date(n.date).toLocaleString();
-      li.innerHTML = `<strong>${date}:</strong> ${n.message}`;
-      noticeList.appendChild(li);
-    });
-  });
-</script>
 
     firebase.database().ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
       const container = document.getElementById("latest-feedbacks");
