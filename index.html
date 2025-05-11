@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Maa Saraswati Shikshayatan</title>
+  <title>মা সরস্বতী শিক্ষায়তন</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -11,16 +11,27 @@
       padding: 0;
       background: #f0f2f5;
     }
-    header, footer {
+    header {
       background: #2c3e50;
       color: white;
-      text-align: center;
-      padding: 20px;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header .title-box {
+      flex-grow: 1;
+    }
+    header img {
+      height: 60px;
+      width: auto;
+      border-radius: 50%;
+      border: 2px solid white;
     }
     nav {
       background: #34495e;
       padding: 10px;
-      text-align: center;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
@@ -34,7 +45,7 @@
       border-radius: 4px;
       background: #3d566e;
     }
-    nav a.login-button, nav a.feedback-tab {
+    nav a.login-button {
       background: #e67e22;
     }
     .section {
@@ -57,26 +68,12 @@
     }
     .profile-box {
       display: flex;
-      flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
       gap: 20px;
       background: #fff;
       border-radius: 10px;
       padding: 20px;
-    }
-    .gallery-container {
-      position: relative;
-      max-width: 900px;
-      overflow: hidden;
-      border-radius: 10px;
-    }
-    .gallery-slides {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-    .gallery-slide {
-      min-width: 100%;
     }
     .gallery-slide img {
       width: 100%;
@@ -118,15 +115,6 @@
       background-color: #ccc;
       border-radius: 4px;
     }
-    @media (max-width: 600px) {
-      .profile-box {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .gallery-slide img {
-        height: 200px;
-      }
-    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -144,88 +132,49 @@
   </script>
 </head>
 <body>
-  <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; flex-wrap: nowrap;">
-  <div style="flex-grow: 1;">
-    <h1 style="margin: 0; font-size: 24px;">Maa Saraswati Shikshayatan</h1>
-    <p style="margin: 4px 0 0; font-size: 14px;">A Trusted Coaching Center for Academic Excellence</p>
-  </div>
-  <div style="margin-left: 20px;">
-    <img src="images/Pngtree—happy saraswati puja hindu goddess_20301854.png" alt="Saraswati Mata" style="height: 60px; width: auto;">
-  </div>
-</header>
+
+  <header>
+    <div class="title-box">
+      <h1 style="margin: 0; font-size: 24px;">মা সরস্বতী শিক্ষায়তন</h1>
+      <p style="margin: 4px 0 0; font-size: 14px;">A Trusted Coaching Center for Academic Excellence</p>
+    </div>
+    <div>
+      <img src="images/Pngtree—happy saraswati puja hindu goddess_20301854.png" alt="Saraswati Mata Logo">
+    </div>
+  </header>
 
   <nav>
     <a href="#hero">Home</a>
     <a href="#message">Head's Message</a>
     <a href="#gallery">Gallery</a>
     <a href="#feedback">Feedback</a>
+    <a href="literature.html">Literature</a>
     <a href="contact.html">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
+
   <section class="hero" id="hero">
     <h2>Welcome to Maa Saraswati Shikshayatan</h2>
     <p>We nurture students to unlock their full potential through discipline, dedication, and quality teaching.</p>
   </section>
+
   <section class="section" id="message">
     <h2 style="text-align:center;">Message from the Head</h2>
     <div class="profile-box">
       <img src="images/FB_IMG_1746852698228.jpg" alt="Head" style="width: 160px; height: 160px; border-radius: 10px; object-fit: cover;">
       <div class="scroll-box" style="flex: 1;">
         <p style="font-size: 16px; line-height: 1.6;">
-          <strong>Mr. Anup Sarkar</strong>, our respected Principal, is the guiding force behind Maa Saraswati Shikshayatan. With over a decade of experience in the field of education, he believes that a disciplined environment and personal attention to each student can foster not just academic success, but also strong moral character and leadership.
-          <br><br>
-          Under his vision, we aim to create a learning space that goes beyond books—where students gain confidence, compassion, and critical thinking skills. His commitment continues to inspire our faculty and students to reach new heights with integrity and perseverance.
+          <strong>Mr. Anup Sarkar</strong>, our respected Principal, is the guiding force behind Maa Saraswati Shikshayatan...
         </p>
       </div>
     </div>
   </section>
-  <section class="section" id="admission">
-    <h2 style="text-align:center;">Admission Information</h2>
-    <div class="scroll-box">
-      <p style="font-size: 16px; line-height: 1.8;">
-        Maa Saraswati Shikshayatan offers academic guidance for students from <strong>Class 9 to Class 12</strong>.
-        We specialize in the <strong>Arts stream</strong>, focusing on subjects such as:
-        <ul>
-          <li>Bengali</li>
-          <li>Education</li>
-          <li>History</li>
-          <li>Geography</li>
-          <li>Political Science</li>
-          <li>Philosophy</li>
-        </ul>
-        <br>
-        <strong>Admission Process:</strong><br>
-        Students or guardians can visit the institute during working hours for queries and enrollment. Necessary documents include:
-        <ul>
-          <li>Previous class marksheet</li>
-          <li>Recent passport-size photograph</li>
-          <li>School ID card (if any)</li>
-        </ul>
-        For more details, feel free to contact us or visit our campus directly.
-      </p>
-    </div>
-  </section>
+
   <section class="section" id="gallery">
     <h2 style="text-align:center;">Photo Gallery</h2>
-    <div class="gallery-container">
-      <div class="gallery-slides" id="gallery-slides">
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
-      </div>
-    </div>
+    <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
   </section>
+
   <section class="section" id="feedback">
     <h2 style="text-align:center;">Give Your Feedback</h2>
     <form onsubmit="submitFeedback(event)" style="max-width: 700px; margin: 0 auto;">
@@ -236,22 +185,16 @@
     <h3 style="text-align:center; margin-top: 30px;">Recent Feedbacks</h3>
     <div id="latest-feedbacks"></div>
   </section>
+
   <footer>
     <p style="font-size: 14px; line-height: 1.6;">
       Address: Amtalighat, Kupadaha, Bamangola, Malda, 733142<br>
       Phone: 9851123356 / 9851615653<br>
-      &copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.
+      &copy; 2025 মা সরস্বতী শিক্ষায়তন. All Rights Reserved.
     </p>
   </footer>
-  <script>
-    let galleryIndex = 0;
-    const slides = document.querySelectorAll('.gallery-slide');
-    const galleryTrack = document.getElementById('gallery-slides');
-    setInterval(() => {
-      galleryIndex = (galleryIndex + 1) % slides.length;
-      galleryTrack.style.transform = `translateX(-${galleryIndex * 100}%)`;
-    }, 3000);
 
+  <script>
     function submitFeedback(e) {
       e.preventDefault();
       const name = document.getElementById("feedback-name").value.trim();
@@ -278,5 +221,6 @@
       });
     });
   </script>
+
 </body>
 </html>
