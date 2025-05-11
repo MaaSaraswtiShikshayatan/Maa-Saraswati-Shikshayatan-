@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maa Saraswati Shikshayatan</title>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background: linear-gradient(135deg, #4ca1af, #2c3e50); }
+    header, footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
+    nav { background: #34495e; padding: 10px; text-align: center; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    nav a.login-button, nav a.feedback-tab { background: #e67e22; padding: 6px 12px; border-radius: 6px; }
+    @media (max-width:600px) { nav { display:flex; flex-direction:column; align-items:center;} nav a { margin:10px 0; }}
+    .section { padding:40px 20px; max-width:900px; margin:40px auto; background:white; box-shadow:0 0 10px rgba(0,0,0,0.1); border-radius:8px; }
+    .hero { background: linear-gradient(135deg, #4ca1af, #2c3e50); color:white; padding:60px 20px; text-align:center; }
+    .profile-box, .notice-box { background:#fff; border-radius:10px; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.2); margin-top:20px; }
+    .notice { border-bottom:1px solid #ccc; padding:10px 0; }
+    .notice:last-child { border-bottom:none; }
+    .notice-date { color:#888; font-size:12px; }
+    /* Gallery Styles */
+    .gallery-container { position:relative; max-width:900px; margin:40px auto; overflow:hidden; }
+    .gallery-slides { display:flex; transition:transform 0.5s ease-in-out; }
+    .gallery-slide { flex: 0 0 100%; }
+    .gallery-slide img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
+    @media (max-width:600px) { .gallery-slide img{height:200px;} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Maa Saraswati Shikshayatan</h1>
+    <p>A Trusted Coaching Center for Academic Excellence</p>
+  </header>
+
+  <nav>
+    <a href="#hero">Home</a>
+    <a href="#message">Head's Message</a>
+    <a href="#admission">Admission</a>
+    <a href="#notices">Notices</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#feedback" class="feedback-tab">Feedback</a>
+    <a href="#contact">Contact</a>
+    <a href="login.html" class="login-button">Login</a>
+  </nav>
+
+  <section class="hero" id="hero">
+    <h2>Welcome to Maa Saraswati Shikshayatan</h2>
+    <p>We nurture students to unlock their full potential through discipline, dedication, and quality teaching.</p>
+  </section>
+
+  <section class="section" id="message">
+  <h2>Message from the Head</h2>
+  <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
+    <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
+    <div style="flex: 1;">
+      <p>
+        <strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education. Under his guidance, our institution has grown into a nurturing environment where every student is encouraged to strive for excellence—not only academically, but also in character and values. With years of dedication and a student-first approach, he continues to lead our faculty and learners toward a brighter, empowered future.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+  <section class="section" id="admission">
+    <h2>Admission</h2>
+    <div class="profile-box">
+      <p>At Maa Saraswati Shikshayatan, we offer comprehensive coaching from Class VI through XII, covering all major subjects including Mathematics, Science, Social Studies, and Languages.</p>
+      <p>To apply for admission:</p>
+      <ul>
+        <li>Download and complete the <a href="admission-form.html">online admission form</a>.</li>
+        <li>Submit the filled form along with photocopies of previous academic records.</li>
+        <li>Visit our center for a brief counseling session with our academic coordinator.</li>
+      </ul>
+      <p>Seats are limited, so early application is advised!</p>
+    </div>
+  </section>
+
+  <section class="section" id="notices">
+    <h2>Latest Notices</h2>
+    <div class="notice-box" id="notice-list"></div>
+  </section>
+
+  <section class="section" id="gallery">
+    <h2>Photo Gallery</h2>
+    <div class="gallery-container">
+      <div class="gallery-slides">
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+        authDomain: "masaraswatishikshyatan.firebaseapp.com",
+        databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+        projectId: "masaraswatishikshyatan",
+        storageBucket: "masaraswatishikshyatan.appspot.com",
+        messagingSenderId: "1086364385293",
+        appId: "1:1086364385293:web:91e762be2245715e26d544"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      // Load notices
+      const noticeList = document.getElementById('notice-list');
+      db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
+        noticeList.innerHTML = '';
+        if (!snapshot.exists()) {
+          noticeList.innerHTML = '<p>No notices published yet.</p>';
+          return;
+        }
+        snapshot.forEach(child => {
+          const notice = child.val();
+          const div = document.createElement('div');
+          div.classList.add('notice');
+          div.innerHTML = `<p>${notice.text || notice.message}</p><div class="notice-date">${new Date(notice.timestamp || notice.date).toLocaleDateString('en-GB')}</div>`;
+          noticeList.prepend(div);
+        });
+      });
+
+      
+      // Feedback
+      function submitFeedback(event) {
+        event.preventDefault();
+        const name = document.getElementById("feedback-name").value.trim();
+        const text = document.getElementById("feedback-text").value.trim();
+        if (!name || !text) return alert("Fill both fields");
+        const timestamp = Date.now();
+        db.ref("feedbacks").push({ name, text, timestamp }).then(() => {
+          alert("Feedback submitted!");
+          document.getElementById("feedback-name").value = "";
+          document.getElementById("feedback-text").value = "";
+        });
+      }
+
+      function loadFeedbacks() {
+        const container = document.getElementById("latest-feedbacks");
+        db.ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
+          container.innerHTML = "";
+          const data = [];
+          snap.forEach(child => data.push(child.val()));
+          data.reverse().forEach(fb => {
+            const div = document.createElement("div");
+            div.style = "margin-bottom:15px;padding:10px;border:1px solid #ccc;border-radius:10px;background:#f9f9f9;";
+            div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p>`;
+            container.appendChild(div);
+          });
+        });
+      }
+      loadFeedbacks();
+
+      // Gallery Auto-slide
+      const slides = document.querySelectorAll('.gallery-slide');
+      const slidesContainer = document.querySelector('.gallery-slides');
+      let idx = 0;
+      setInterval(() => {
+        idx = (idx + 1) % slides.length;
+        slidesContainer.style.transform = `translateX(-${idx * 100}%)`;
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
