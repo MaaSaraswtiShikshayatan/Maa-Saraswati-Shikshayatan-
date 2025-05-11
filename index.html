@@ -26,6 +26,18 @@
     .gallery-slide { flex: 0 0 100%; }
     .gallery-slide img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
     @media (max-width:600px) { .gallery-slide img{height:200px;} }
+    
+    /* Contact Section Styling */
+    #contact { background: #fff; padding: 40px 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
+    #contact p { font-size: 18px; margin: 5px 0; }
+    
+    /* Feedback Section Styling */
+    #feedback { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; }
+    #feedback-form input, #feedback-form textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; }
+    #feedback-form button { background: #e67e22; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+    #feedback-form button:hover { background: #d35400; }
+    #latest-feedbacks { margin-top: 20px; }
+    #latest-feedbacks div { background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -51,17 +63,16 @@
   </section>
 
   <section class="section" id="message">
-  <h2>Message from the Head</h2>
-  <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
-    <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
-    <div style="flex: 1;">
-      <p>
-        <strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education. Under his guidance, our institution has grown into a nurturing environment where every student is encouraged to strive for excellence—not only academically, but also in character and values. With years of dedication and a student-first approach, he continues to lead our faculty and learners toward a brighter, empowered future.
-      </p>
+    <h2>Message from the Head</h2>
+    <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
+      <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
+      <div style="flex: 1;">
+        <p>
+          <strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education. Under his guidance, our institution has grown into a nurturing environment where every student is encouraged to strive for excellence—not only academically, but also in character and values. With years of dedication and a student-first approach, he continues to lead our faculty and learners toward a brighter, empowered future.
+        </p>
+      </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <section class="section" id="admission">
     <h2>Admission</h2>
@@ -88,33 +99,28 @@
       <div class="gallery-slides">
         <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
         <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
+        <!-- Add more gallery images if needed -->
       </div>
     </div>
   </section>
-<!-- Contact Section -->
-<section class="section" id="contact">
-  <h2>Contact Us</h2>
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-    <p style="font-size: 18px;">
-      📍 <strong>Amtalighat, Kupadaha, Bamangola, Malda, 733142</strong>
-    </p>
-    <p style="font-size: 18px;">
-      📞 <strong>9851123356 / 9851615653</strong>
-    </p>
-  </div>
-</section>
+
+  <section class="section" id="feedback">
+    <h2>Feedback</h2>
+    <div id="feedback">
+      <form id="feedback-form" onsubmit="submitFeedback(event)">
+        <input type="text" id="feedback-name" placeholder="Your Name" required />
+        <textarea id="feedback-text" placeholder="Your Feedback" rows="4" required></textarea>
+        <button type="submit">Submit Feedback</button>
+      </form>
+      <div id="latest-feedbacks"></div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <h2>Contact Us</h2>
+    <p>📍 <strong>Amtalighat, Kupadaha, Bamangola, Malda, 733142</strong></p>
+    <p>📞 <strong>9851123356 / 9851615653</strong></p>
+  </section>
   
   <footer>
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.</p>
@@ -152,7 +158,6 @@
         });
       });
 
-      
       // Feedback
       function submitFeedback(event) {
         event.preventDefault();
