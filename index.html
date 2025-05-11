@@ -41,7 +41,7 @@
       border-radius: 6px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width:600px) {
       nav {
         display: flex;
         flex-direction: column;
@@ -56,8 +56,8 @@
       padding: 40px 20px;
       max-width: 900px;
       margin: 40px auto;
-      background: #f5f5f5; /* Light grey background */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: #ffe6f0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 8px;
     }
 
@@ -68,12 +68,17 @@
       text-align: center;
     }
 
-    .profile-box, .notice-box, .feedback-box {
-      background: #fff;
+    .profile-box, .notice-box {
+      background: #ffe6f0;
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
       margin-top: 20px;
+    }
+
+    .notice-box {
+      max-height: 200px;
+      overflow-y: auto;
     }
 
     .notice {
@@ -90,7 +95,6 @@
       font-size: 12px;
     }
 
-    /* Gallery Styles */
     .gallery-container {
       position: relative;
       max-width: 900px;
@@ -114,31 +118,19 @@
       border-radius: 10px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width:600px) {
       .gallery-slide img {
         height: 200px;
       }
     }
 
-    /* Scroll for Notices and Feedback */
-    .scrollable {
-      max-height: 250px;
+    #latest-feedbacks {
+      max-height: 180px;
       overflow-y: auto;
-      padding-right: 10px;
-      margin-top: 10px;
-    }
-
-    /* Address Styling */
-    #contact {
-      background: #f5f5f5; /* Light grey background */
-    }
-
-    .address-container {
-      padding: 20px;
-      background: #ffffff; /* White background for contact section */
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      background: #fff0f5;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -169,7 +161,7 @@
     <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
       <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
       <div style="flex: 1;">
-        <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort...</p>
+        <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education...</p>
       </div>
     </div>
   </section>
@@ -177,32 +169,13 @@
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
-      <p>At Maa Saraswati Shikshayatan, we offer comprehensive coaching from Class VI through XII...</p>
-      <ul>
-        <li>Download and complete the <a href="admission-form.html">online admission form</a>.</li>
-        <li>Submit the filled form along with photocopies of previous academic records.</li>
-        <li>Visit our center for a brief counseling session with our academic coordinator.</li>
-      </ul>
-      <p>Seats are limited, so early application is advised!</p>
+      <p>We offer coaching from Class VI through XII...</p>
     </div>
   </section>
 
   <section class="section" id="notices">
     <h2>Latest Notices</h2>
-    <div class="notice-box scrollable" id="notice-list"></div>
-  </section>
-
-  <section class="section" id="feedback">
-    <h2>Feedback</h2>
-    <div class="feedback-box">
-      <form onsubmit="submitFeedback(event)">
-        <input type="text" id="feedback-name" placeholder="Your Name" required style="width: 100%; padding: 10px; margin-bottom: 10px;"/>
-        <textarea id="feedback-text" placeholder="Your Feedback" required style="width: 100%; padding: 10px; margin-bottom: 10px; height: 100px;"></textarea>
-        <button type="submit" style="width: 100%; padding: 10px; background-color: #e67e22; color: white; border: none;">Submit</button>
-      </form>
-    </div>
-    <h3>Latest Feedbacks</h3>
-    <div class="scrollable" id="latest-feedbacks"></div>
+    <div class="notice-box" id="notice-list"></div>
   </section>
 
   <section class="section" id="gallery">
@@ -210,17 +183,29 @@
     <div class="gallery-container">
       <div class="gallery-slides">
         <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <!-- More gallery images -->
+        <!-- More images here -->
       </div>
     </div>
   </section>
 
+  <section class="section" id="feedback">
+    <h2>Give Your Feedback</h2>
+    <form onsubmit="submitFeedback(event)">
+      <input type="text" id="feedback-name" placeholder="Your Name" style="padding:8px; margin:10px 0; width:100%; border-radius:6px;" required>
+      <textarea id="feedback-text" placeholder="Your Feedback" style="padding:8px; width:100%; height:80px; border-radius:6px;" required></textarea>
+      <button type="submit" style="padding:10px 20px; background:#e67e22; color:white; border:none; border-radius:6px; margin-top:10px;">Submit</button>
+    </form>
+    <h3 style="margin-top:30px;">Recent Feedbacks</h3>
+    <div id="latest-feedbacks"></div>
+  </section>
+
   <section class="section" id="contact">
     <h2>Contact Us</h2>
-    <div class="address-container">
-      <p>📍 <strong>Amtalighat, Kupadaha, Bamangola, Malda, 733142</strong></p>
-      <p>📞 <strong>9851123356 / 9851615653</strong></p>
-    </div>
+    <p>
+      Address: <a href="https://maps.google.com/?q=Amtalighat, Kupadaha, Bamangola, Malda, 733142" target="_blank">
+      Amtalighat, Kupadaha, Bamangola, Malda, 733142</a><br/>
+      Phone: <a href="tel:9851123356">9851123356</a> / <a href="tel:9851615653">9851615653</a>
+    </p>
   </section>
 
   <footer>
@@ -229,7 +214,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
         authDomain: "masaraswatishikshyatan.firebaseapp.com",
@@ -259,7 +243,7 @@
         });
       });
 
-      // Feedback submission function
+      // Feedback
       function submitFeedback(event) {
         event.preventDefault();
         const name = document.getElementById("feedback-name").value.trim();
@@ -273,7 +257,8 @@
         });
       }
 
-      // Load feedbacks
+      window.submitFeedback = submitFeedback;
+
       function loadFeedbacks() {
         const container = document.getElementById("latest-feedbacks");
         db.ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
@@ -288,6 +273,7 @@
           });
         });
       }
+
       loadFeedbacks();
 
       // Gallery Auto-slide
