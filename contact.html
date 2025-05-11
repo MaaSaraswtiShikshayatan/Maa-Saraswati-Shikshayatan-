@@ -4,57 +4,104 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact - Maa Saraswati Shikshayatan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
-      background: #f8f9fa;
+      background: #f4f6f8;
     }
     .header {
-      background: #003366;
+      background: #004080;
       color: white;
-      padding: 20px;
       text-align: center;
+      padding: 40px 20px;
     }
-    .contact-box {
+    .container {
       max-width: 900px;
       margin: 30px auto;
       background: white;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
     }
     h2 {
-      color: #003366;
+      color: #004080;
     }
-    p, a {
+    .info p {
       font-size: 16px;
-      color: #333;
-      line-height: 1.8;
+      margin: 10px 0;
+    }
+    .info i {
+      margin-right: 10px;
+      color: #004080;
     }
     a {
-      color: #0077cc;
+      color: #0066cc;
       text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      border-radius: 8px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      background: #004080;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003060;
     }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>Maa Saraswati Shikshayatan</h1>
-    <p>Contact Information</p>
+    <p>We're here to help you!</p>
   </div>
-  <div class="contact-box">
-    <h2>Get in Touch</h2>
-    <p><strong>Address:</strong> <a href="https://maps.google.com/?q=Amtalighat, Kupadaha, Bamangola, Malda, 733142" target="_blank">Amtalighat, Kupadaha, Bamangola, Malda, 733142</a></p>
-    <p><strong>Phone:</strong> <a href="tel:9851123356">9851123356</a>, <a href="tel:9851615653">9851615653</a></p>
-    <p><strong>Email:</strong> <a href="mailto:masaraswatisikshyatan@gmail.com">masaraswatisikshyatan@gmail.com</a></p>
-    <p><strong>WhatsApp:</strong> <a href="https://wa.me/9851123356" target="_blank">Chat on WhatsApp</a></p>
-    <p><strong>Principal's Facebook:</strong> <a href="https://www.facebook.com/share/198QaF31gi/" target="_blank">Visit Profile</a></p>
-    <p><strong>Website:</strong> <a href="https://crpusd.org/Schools" target="_blank">crpusd.org/Schools</a></p>
+  <div class="container">
+    <h2>Contact Information</h2>
+    <div class="info">
+      <p><i class="fas fa-map-marker-alt"></i> <a href="https://maps.app.goo.gl/n9AqLH9AM3wVZ6gw6" target="_blank">Amtalighat, Kupadaha, Bamangola, Malda, 733142</a></p>
+      <p><i class="fas fa-phone"></i> <a href="tel:9851123356">9851123356</a>, <a href="tel:9851615653">9851615653</a></p>
+      <p><i class="fas fa-envelope"></i> <a href="mailto:masaraswatisikshyatan@gmail.com">masaraswatisikshyatan@gmail.com</a></p>
+      <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/9851123356" target="_blank">Chat on WhatsApp</a></p>
+      <p><i class="fab fa-facebook"></i> <a href="https://www.facebook.com/share/198QaF31gi/" target="_blank">Principal's Facebook</a></p>
+      <p><i class="fas fa-globe"></i> <a href="https://crpusd.org/Schools" target="_blank">Visit Our Official Page</a></p>
+    </div>
+
+    <div class="form-group">
+      <h2>Send Us a Message</h2>
+      <form action="mailto:masaraswatisikshyatan@gmail.com" method="POST" enctype="text/plain">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+      </form>
+    </div>
+
+    <div class="map-container">
+      <h2>Our Location</h2>
+      <iframe src="https://maps.google.com/maps?q=Amtalighat,%20Kupadaha,%20Bamangola,%20Malda,%20733142&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+    </div>
   </div>
 </body>
 </html>
