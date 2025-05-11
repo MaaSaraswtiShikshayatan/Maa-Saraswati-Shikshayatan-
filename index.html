@@ -4,15 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maa Saraswati Shikshayatan</title>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #4ca1af, #2c3e50);
+      background: #f0f2f5;
     }
 
     header, footer {
@@ -41,25 +38,20 @@
       border-radius: 6px;
     }
 
-    @media (max-width:600px) {
-      nav {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      nav a {
-        margin: 10px 0;
-      }
-    }
-
     .section {
       padding: 40px 20px;
       max-width: 900px;
       margin: 40px auto;
-      background: #ffe6f0;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: white;
       border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
+
+    #message { background: #fff5f0; }
+    #admission { background: #f0f9ff; }
+    #notices { background: #fffbea; }
+    #feedback { background: #f9f0ff; }
+    #contact { background: #f0fff5; }
 
     .hero {
       background: linear-gradient(135deg, #4ca1af, #2c3e50);
@@ -68,17 +60,22 @@
       text-align: center;
     }
 
-    .profile-box, .notice-box {
-      background: #ffe6f0;
+    .profile-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      background: #fff;
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      margin-top: 20px;
     }
 
     .notice-box {
       max-height: 200px;
       overflow-y: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
     }
 
     .notice {
@@ -86,20 +83,16 @@
       padding: 10px 0;
     }
 
-    .notice:last-child {
-      border-bottom: none;
-    }
-
     .notice-date {
-      color: #888;
       font-size: 12px;
+      color: #888;
     }
 
     .gallery-container {
       position: relative;
       max-width: 900px;
-      margin: 40px auto;
       overflow: hidden;
+      border-radius: 10px;
     }
 
     .gallery-slides {
@@ -108,7 +101,7 @@
     }
 
     .gallery-slide {
-      flex: 0 0 100%;
+      min-width: 100%;
     }
 
     .gallery-slide img {
@@ -118,19 +111,46 @@
       border-radius: 10px;
     }
 
-    @media (max-width:600px) {
-      .gallery-slide img {
-        height: 200px;
-      }
+    #feedback form input, #feedback form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    #feedback form button {
+      background: #e67e22;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     #latest-feedbacks {
-      max-height: 180px;
+      max-height: 150px;
       overflow-y: auto;
       background: #fff0f5;
       padding: 10px;
       border-radius: 10px;
-      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .profile-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .gallery-slide img {
+        height: 200px;
+      }
     }
   </style>
 </head>
@@ -158,10 +178,10 @@
 
   <section class="section" id="message">
     <h2>Message from the Head</h2>
-    <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
-      <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
-      <div style="flex: 1;">
-        <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education...</p>
+    <div class="profile-box">
+      <img src="images/FB_IMG_1746852698228.jpg" alt="Head" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
+      <div>
+        <p><strong>Mr. Anup Sarkar</strong> has always believed in the power of disciplined effort and personalized attention in education. Under his leadership, we continue to foster academic excellence and holistic growth.</p>
       </div>
     </div>
   </section>
@@ -169,21 +189,29 @@
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
-      <p>We offer coaching from Class VI through XII...</p>
+      <p>We offer classes from VI to XII with experienced faculty in Science, Arts and Commerce streams. Admissions are open throughout the year.</p>
+      <ul>
+        <li>Download the <a href="admission-form.html">admission form</a>.</li>
+        <li>Submit scanned academic documents via email or visit us.</li>
+        <li>Book a counselling slot with our academic head.</li>
+      </ul>
     </div>
   </section>
 
   <section class="section" id="notices">
     <h2>Latest Notices</h2>
-    <div class="notice-box" id="notice-list"></div>
+    <div class="notice-box" id="notice-list">
+      <!-- Dynamic notices -->
+    </div>
   </section>
 
   <section class="section" id="gallery">
     <h2>Photo Gallery</h2>
     <div class="gallery-container">
-      <div class="gallery-slides">
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <!-- More images here -->
+      <div class="gallery-slides" id="gallery-slides">
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt=""></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt=""></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt=""></div>
       </div>
     </div>
   </section>
@@ -191,11 +219,11 @@
   <section class="section" id="feedback">
     <h2>Give Your Feedback</h2>
     <form onsubmit="submitFeedback(event)">
-      <input type="text" id="feedback-name" placeholder="Your Name" style="padding:8px; margin:10px 0; width:100%; border-radius:6px;" required>
-      <textarea id="feedback-text" placeholder="Your Feedback" style="padding:8px; width:100%; height:80px; border-radius:6px;" required></textarea>
-      <button type="submit" style="padding:10px 20px; background:#e67e22; color:white; border:none; border-radius:6px; margin-top:10px;">Submit</button>
+      <input type="text" id="feedback-name" placeholder="Your Name" required>
+      <textarea id="feedback-text" placeholder="Your Feedback" required></textarea>
+      <button type="submit">Submit</button>
     </form>
-    <h3 style="margin-top:30px;">Recent Feedbacks</h3>
+    <h3>Recent Feedbacks</h3>
     <div id="latest-feedbacks"></div>
   </section>
 
@@ -213,78 +241,66 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const firebaseConfig = {
-        apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
-        authDomain: "masaraswatishikshyatan.firebaseapp.com",
-        databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
-        projectId: "masaraswatishikshyatan",
-        storageBucket: "masaraswatishikshyatan.appspot.com",
-        messagingSenderId: "1086364385293",
-        appId: "1:1086364385293:web:91e762be2245715e26d544"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
+    // Gallery slideshow
+    let galleryIndex = 0;
+    const slides = document.querySelectorAll('.gallery-slide');
+    const galleryTrack = document.getElementById('gallery-slides');
+    setInterval(() => {
+      galleryIndex = (galleryIndex + 1) % slides.length;
+      galleryTrack.style.transform = `translateX(-${galleryIndex * 100}%)`;
+    }, 3000);
 
-      // Load notices
+    // Firebase setup
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc_Uin1JqRT8fuhtPueGKa9J120sh3qt4",
+      authDomain: "masaraswatishikshyatan.firebaseapp.com",
+      databaseURL: "https://masaraswatishikshyatan-default-rtdb.firebaseio.com",
+      projectId: "masaraswatishikshyatan",
+      storageBucket: "masaraswatishikshyatan.appspot.com",
+      messagingSenderId: "1086364385293",
+      appId: "1:1086364385293:web:91e762be2245715e26d544"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Load notices
+    db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
       const noticeList = document.getElementById('notice-list');
-      db.ref('notices').orderByChild('timestamp').on('value', snapshot => {
-        noticeList.innerHTML = '';
-        if (!snapshot.exists()) {
-          noticeList.innerHTML = '<p>No notices published yet.</p>';
-          return;
-        }
-        snapshot.forEach(child => {
-          const notice = child.val();
-          const div = document.createElement('div');
-          div.classList.add('notice');
-          div.innerHTML = `<p>${notice.text || notice.message}</p><div class="notice-date">${new Date(notice.timestamp || notice.date).toLocaleDateString('en-GB')}</div>`;
-          noticeList.prepend(div);
-        });
+      noticeList.innerHTML = '';
+      snapshot.forEach(child => {
+        const data = child.val();
+        const div = document.createElement('div');
+        div.classList.add('notice');
+        div.innerHTML = `<p>${data.text}</p><div class="notice-date">${new Date(data.timestamp).toLocaleDateString()}</div>`;
+        noticeList.prepend(div);
       });
+    });
 
-      // Feedback
-      function submitFeedback(event) {
-        event.preventDefault();
-        const name = document.getElementById("feedback-name").value.trim();
-        const text = document.getElementById("feedback-text").value.trim();
-        if (!name || !text) return alert("Fill both fields");
-        const timestamp = Date.now();
-        db.ref("feedbacks").push({ name, text, timestamp }).then(() => {
-          alert("Feedback submitted!");
-          document.getElementById("feedback-name").value = "";
-          document.getElementById("feedback-text").value = "";
-        });
-      }
+    // Feedback functions
+    function submitFeedback(e) {
+      e.preventDefault();
+      const name = document.getElementById("feedback-name").value;
+      const text = document.getElementById("feedback-text").value;
+      if (!name || !text) return alert("Please fill out both fields.");
+      db.ref("feedbacks").push({ name, text, timestamp: Date.now() }).then(() => {
+        document.getElementById("feedback-name").value = '';
+        document.getElementById("feedback-text").value = '';
+      });
+    }
 
-      window.submitFeedback = submitFeedback;
-
-      function loadFeedbacks() {
-        const container = document.getElementById("latest-feedbacks");
-        db.ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
-          container.innerHTML = "";
-          const data = [];
-          snap.forEach(child => data.push(child.val()));
-          data.reverse().forEach(fb => {
-            const div = document.createElement("div");
-            div.style = "margin-bottom:15px;padding:10px;border:1px solid #ccc;border-radius:10px;background:#f9f9f9;";
-            div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p>`;
-            container.appendChild(div);
-          });
-        });
-      }
-
-      loadFeedbacks();
-
-      // Gallery Auto-slide
-      const slides = document.querySelectorAll('.gallery-slide');
-      const slidesContainer = document.querySelector('.gallery-slides');
-      let idx = 0;
-      setInterval(() => {
-        idx = (idx + 1) % slides.length;
-        slidesContainer.style.transform = `translateX(-${idx * 100}%)`;
-      }, 3000);
+    db.ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
+      const container = document.getElementById("latest-feedbacks");
+      container.innerHTML = "";
+      const data = [];
+      snap.forEach(child => data.push(child.val()));
+      data.reverse().forEach(fb => {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p>`;
+        container.appendChild(div);
+      });
     });
   </script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </body>
 </html>
