@@ -249,39 +249,54 @@
     </p>
   </footer>
   <script>
-    let galleryIndex = 0;
-    const slides = document.querySelectorAll('.gallery-slide');
-    const galleryTrack = document.getElementById('gallery-slides');
-    setInterval(() => {
-      galleryIndex = (galleryIndex + 1) % slides.length;
-      galleryTrack.style.transform = `translateX(-${galleryIndex * 100}%)`;
-    }, 3000);
+  let galleryIndex = 0;
+  const slides = document.querySelectorAll('.gallery-slide');
+  const galleryTrack = document.getElementById('gallery-slides');
+  setInterval(() => {
+    galleryIndex = (galleryIndex + 1) % slides.length;
+    galleryTrack.style.transform = `translateX(-${galleryIndex * 100}%)`;
+  }, 3000);
 
-    function submitFeedback(e) {
-      e.preventDefault();
-      const name = document.getElementById("feedback-name").value.trim();
-      const text = document.getElementById("feedback-text").value.trim();
-      if (!name || !text) return alert("Please fill in both fields.");
-      const timestamp = Date.now();
-      firebase.database().ref("feedbacks").push({ name, text, timestamp }).then(() => {
-        alert("Feedback submitted!");
-        document.getElementById("feedback-name").value = '';
-        document.getElementById("feedback-text").value = '';
-      });
-    }
+  function submitFeedback(e) {
+    e.preventDefault();
+    const name = document.getElementById("feedback-name").value.trim();
+    const text = document.getElementById("feedback-text").value.trim();
+    if (!name || !text) return alert("Please fill in both fields.");
+    const timestamp = Date.now();
+    firebase.database().ref("feedbacks").push({ name, text, timestamp }).then(() => {
+      alert("Feedback submitted!");
+      document.getElementById("feedback-name").value = '';
+      document.getElementById("feedback-text").value = '';
+    });
+  }
 
-    firebase.database().ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
-      const container = document.getElementById("latest-feedbacks");
-      container.innerHTML = "";
-      const data = [];
-      snap.forEach(child => data.push(child.val()));
-      data.reverse().forEach(fb => {
-        const div = document.createElement("div");
-        div.style = "margin-bottom:15px; padding:10px; background:#ffffff; border-radius:6px; border:1px solid #ddd;";
-        div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p>`;
-        container.appendChild(div);
-      });
-    });
-  </script>
+  firebase.database().ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
+    const container = document.getElementById("latest-feedbacks");
+    container.innerHTML = "";
+    const data = [];
+    snap.forEach(child => data.push(child.val()));
+    data.reverse().forEach(fb => {
+      const div = document.createElement("div");
+      div.style = "margin-bottom:15px; padding:10px; background:#ffffff; border-radius:6px; border:1px solid #ddd;";
+      div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p>`;
+      container.appendChild(div);
+    });
+  });
+
+  // Notice Section Loader
+  firebase.database().ref("notices").orderByChild("date").limitToLast(10).on("value", snap => {
+    const noticeList = document.getElementById("notice-list");
+    noticeList.innerHTML = "";
+    const data = [];
+    snap.forEach(child => data.push(child.val()));
+    data.reverse().forEach(n => {
+      const li = document.createElement("li");
+      const date = new Date(n.date).toLocaleString();
+      li.innerHTML = `<strong>${date}:</strong> ${n.message}`;
+      noticeList.appendChild(li);
+    });
+  });
+</script>
+
 </body>
 </html>
