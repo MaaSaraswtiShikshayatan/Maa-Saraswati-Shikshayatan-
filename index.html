@@ -8,36 +8,138 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background: linear-gradient(135deg, #4ca1af, #2c3e50); }
-    header, footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
-    nav { background: #34495e; padding: 10px; text-align: center; }
-    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
-    nav a.login-button, nav a.feedback-tab { background: #e67e22; padding: 6px 12px; border-radius: 6px; }
-    @media (max-width:600px) { nav { display:flex; flex-direction:column; align-items:center;} nav a { margin:10px 0; }}
-    .section { padding:40px 20px; max-width:900px; margin:40px auto; background:white; box-shadow:0 0 10px rgba(0,0,0,0.1); border-radius:8px; }
-    .hero { background: linear-gradient(135deg, #4ca1af, #2c3e50); color:white; padding:60px 20px; text-align:center; }
-    .profile-box, .notice-box { background:#fff; border-radius:10px; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.2); margin-top:20px; }
-    .notice { border-bottom:1px solid #ccc; padding:10px 0; }
-    .notice:last-child { border-bottom:none; }
-    .notice-date { color:#888; font-size:12px; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #4ca1af, #2c3e50);
+    }
+
+    header, footer {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    nav {
+      background: #34495e;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a.login-button, nav a.feedback-tab {
+      background: #e67e22;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      nav a {
+        margin: 10px 0;
+      }
+    }
+
+    .section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 40px auto;
+      background: #f5f5f5; /* Light grey background */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #4ca1af, #2c3e50);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .profile-box, .notice-box, .feedback-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      margin-top: 20px;
+    }
+
+    .notice {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+
+    .notice:last-child {
+      border-bottom: none;
+    }
+
+    .notice-date {
+      color: #888;
+      font-size: 12px;
+    }
+
     /* Gallery Styles */
-    .gallery-container { position:relative; max-width:900px; margin:40px auto; overflow:hidden; }
-    .gallery-slides { display:flex; transition:transform 0.5s ease-in-out; }
-    .gallery-slide { flex: 0 0 100%; }
-    .gallery-slide img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
-    @media (max-width:600px) { .gallery-slide img{height:200px;} }
-    
-    /* Contact Section Styling */
-    #contact { background: #fff; padding: 40px 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
-    #contact p { font-size: 18px; margin: 5px 0; }
-    
-    /* Feedback Section Styling */
-    #feedback { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; }
-    #feedback-form input, #feedback-form textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; }
-    #feedback-form button { background: #e67e22; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
-    #feedback-form button:hover { background: #d35400; }
-    #latest-feedbacks { margin-top: 20px; }
-    #latest-feedbacks div { background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 15px; }
+    .gallery-container {
+      position: relative;
+      max-width: 900px;
+      margin: 40px auto;
+      overflow: hidden;
+    }
+
+    .gallery-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .gallery-slide {
+      flex: 0 0 100%;
+    }
+
+    .gallery-slide img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .gallery-slide img {
+        height: 200px;
+      }
+    }
+
+    /* Scroll for Notices and Feedback */
+    .scrollable {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 10px;
+      margin-top: 10px;
+    }
+
+    /* Address Styling */
+    #contact {
+      background: #f5f5f5; /* Light grey background */
+    }
+
+    .address-container {
+      padding: 20px;
+      background: #ffffff; /* White background for contact section */
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -67,9 +169,7 @@
     <div class="profile-box" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
       <img src="images/FB_IMG_1746852698228.jpg" alt="Head of Institution" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">
       <div style="flex: 1;">
-        <p>
-          <strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort and personalized attention in education. Under his guidance, our institution has grown into a nurturing environment where every student is encouraged to strive for excellence—not only academically, but also in character and values. With years of dedication and a student-first approach, he continues to lead our faculty and learners toward a brighter, empowered future.
-        </p>
+        <p><strong>Mr. Anup Sarkar</strong>, the Head of Maa Saraswati Shikshayatan, has always believed in the power of disciplined effort...</p>
       </div>
     </div>
   </section>
@@ -77,8 +177,7 @@
   <section class="section" id="admission">
     <h2>Admission</h2>
     <div class="profile-box">
-      <p>At Maa Saraswati Shikshayatan, we offer comprehensive coaching from Class VI through XII, covering all major subjects including Mathematics, Science, Social Studies, and Languages.</p>
-      <p>To apply for admission:</p>
+      <p>At Maa Saraswati Shikshayatan, we offer comprehensive coaching from Class VI through XII...</p>
       <ul>
         <li>Download and complete the <a href="admission-form.html">online admission form</a>.</li>
         <li>Submit the filled form along with photocopies of previous academic records.</li>
@@ -90,7 +189,20 @@
 
   <section class="section" id="notices">
     <h2>Latest Notices</h2>
-    <div class="notice-box" id="notice-list"></div>
+    <div class="notice-box scrollable" id="notice-list"></div>
+  </section>
+
+  <section class="section" id="feedback">
+    <h2>Feedback</h2>
+    <div class="feedback-box">
+      <form onsubmit="submitFeedback(event)">
+        <input type="text" id="feedback-name" placeholder="Your Name" required style="width: 100%; padding: 10px; margin-bottom: 10px;"/>
+        <textarea id="feedback-text" placeholder="Your Feedback" required style="width: 100%; padding: 10px; margin-bottom: 10px; height: 100px;"></textarea>
+        <button type="submit" style="width: 100%; padding: 10px; background-color: #e67e22; color: white; border: none;">Submit</button>
+      </form>
+    </div>
+    <h3>Latest Feedbacks</h3>
+    <div class="scrollable" id="latest-feedbacks"></div>
   </section>
 
   <section class="section" id="gallery">
@@ -98,30 +210,19 @@
     <div class="gallery-container">
       <div class="gallery-slides">
         <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
-        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
-        <!-- Add more gallery images if needed -->
+        <!-- More gallery images -->
       </div>
-    </div>
-  </section>
-
-  <section class="section" id="feedback">
-    <h2>Feedback</h2>
-    <div id="feedback">
-      <form id="feedback-form" onsubmit="submitFeedback(event)">
-        <input type="text" id="feedback-name" placeholder="Your Name" required />
-        <textarea id="feedback-text" placeholder="Your Feedback" rows="4" required></textarea>
-        <button type="submit">Submit Feedback</button>
-      </form>
-      <div id="latest-feedbacks"></div>
     </div>
   </section>
 
   <section class="section" id="contact">
     <h2>Contact Us</h2>
-    <p>📍 <strong>Amtalighat, Kupadaha, Bamangola, Malda, 733142</strong></p>
-    <p>📞 <strong>9851123356 / 9851615653</strong></p>
+    <div class="address-container">
+      <p>📍 <strong>Amtalighat, Kupadaha, Bamangola, Malda, 733142</strong></p>
+      <p>📞 <strong>9851123356 / 9851615653</strong></p>
+    </div>
   </section>
-  
+
   <footer>
     <p>&copy; 2025 Maa Saraswati Shikshayatan. All Rights Reserved.</p>
   </footer>
@@ -158,7 +259,7 @@
         });
       });
 
-      // Feedback
+      // Feedback submission function
       function submitFeedback(event) {
         event.preventDefault();
         const name = document.getElementById("feedback-name").value.trim();
@@ -172,6 +273,7 @@
         });
       }
 
+      // Load feedbacks
       function loadFeedbacks() {
         const container = document.getElementById("latest-feedbacks");
         db.ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
