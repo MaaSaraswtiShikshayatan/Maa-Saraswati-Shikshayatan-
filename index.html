@@ -21,17 +21,21 @@
       background: #34495e;
       padding: 10px;
       text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     nav a {
       color: white;
-      margin: 0 15px;
+      padding: 8px 16px;
       text-decoration: none;
       font-weight: bold;
+      border-radius: 4px;
+      background: #3d566e;
     }
     nav a.login-button, nav a.feedback-tab {
       background: #e67e22;
-      padding: 6px 12px;
-      border-radius: 6px;
     }
     .section {
       padding: 40px 20px;
@@ -115,11 +119,6 @@
       border-radius: 4px;
     }
     @media (max-width: 600px) {
-      nav {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
       .profile-box {
         flex-direction: column;
         align-items: flex-start;
@@ -154,7 +153,7 @@
     <a href="#message">Head's Message</a>
     <a href="#gallery">Gallery</a>
     <a href="#feedback" class="feedback-tab">Feedback</a>
-    <a href="contact.html">Contact</a>
+    <a href="#contact.html">Contact</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
   <section class="hero" id="hero">
@@ -204,7 +203,20 @@
     <h2 style="text-align:center;">Photo Gallery</h2>
     <div class="gallery-container">
       <div class="gallery-slides" id="gallery-slides">
-        <!-- Gallery images here -->
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683149186.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683658558.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683666926.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683671069.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683673774.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683680714.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683683501.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746683685884.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690957909.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690981964.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690988092.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691050893.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746691005097.jpg" alt="Gallery Image"></div>
+        <div class="gallery-slide"><img src="images/FB_IMG_1746690995584.jpg" alt="Gallery Image"></div>
       </div>
     </div>
   </section>
