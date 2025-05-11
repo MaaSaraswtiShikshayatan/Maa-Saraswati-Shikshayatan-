@@ -160,6 +160,7 @@
     <a href="#gallery">Gallery</a>
     <a href="#feedback">Feedback</a>
     <a href="contact.html">Contact</a>
+    <a href="#notice">Notice</a>
     <a href="login.html" class="login-button">Login</a>
   </nav>
   <section class="hero" id="hero">
@@ -236,6 +237,10 @@
     <h3 style="text-align:center; margin-top: 30px;">Recent Feedbacks</h3>
     <div id="latest-feedbacks"></div>
   </section>
+  <section class="section" id="notice">
+  <h2 style="text-align:center;">Latest Notices</h2>
+  <ul id="notice-list" style="font-size: 16px; line-height: 1.8;"></ul>
+  </section>
   <footer>
     <p style="font-size: 14px; line-height: 1.6;">
       Address: Amtalighat, Kupadaha, Bamangola, Malda, 733142<br>
@@ -264,6 +269,20 @@
         document.getElementById("feedback-text").value = '';
       });
     }
+<script>
+  firebase.database().ref("notices").orderByChild("date").limitToLast(10).on("value", snap => {
+    const noticeList = document.getElementById("notice-list");
+    noticeList.innerHTML = "";
+    const data = [];
+    snap.forEach(child => data.push(child.val()));
+    data.reverse().forEach(n => {
+      const li = document.createElement("li");
+      const date = new Date(n.date).toLocaleString();
+      li.innerHTML = `<strong>${date}:</strong> ${n.message}`;
+      noticeList.appendChild(li);
+    });
+  });
+</script>
 
     firebase.database().ref("feedbacks").orderByChild("timestamp").limitToLast(3).on("value", snap => {
       const container = document.getElementById("latest-feedbacks");
